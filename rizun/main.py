@@ -1,4 +1,4 @@
-# DZ12
+# Модуль Книга записів
 
 from collections import UserDict
 from datetime import date, datetime, timedelta
@@ -136,7 +136,7 @@ class AddressBook(UserDict):
             
     def add_record(self, *argv, **kwarg):           
                     
-        self.data.update({Name_: phones_, Name_+'_birthday': str(birth_)}) 
+        self.data.update({Name_: phones_, Name_+'_день народження': str(birth_)}) 
         
         file_name = 'data.json'        
         with open(file_name, "w") as fh:
@@ -165,7 +165,7 @@ class AddressBook(UserDict):
     
     def delete(self, rec):        
         self.data.pop(rec)
-        self.data.pop(rec+'_birthday')
+        self.data.pop(rec+'_день народження')
         
         a_ = f'DELETED RECORD {rec}'
         print(a_)
@@ -206,22 +206,22 @@ flag_new = 0
 
 book = AddressBook(data, phones)
 
-    # Створення запису для John
-john_record = Record("John")
+    # Створення першого зразкового запису для Приклад_запису_прізвище
+john_record = Record("Приклад_запису_прізвище")
 Name_ = john_record.name.value
 john_record.add_phone("1234567890")
-phones_ = john_record.add_phone("5555555555")
-birth_ = john_record.days_to_birthday(2023, 12, 23)
+phones_ = john_record.add_phone("0987654321")
+birth_ = john_record.days_to_birthday(2050, 12, 23)
 
-    # Додавання запису John до адресної книги
+    # Додавання запису Приклад_запису_прізвище до адресної книги
 book.add_record(john_record)
 
     # Створення та додавання нового запису для Jane
-jane_record = Record("Jane")
-Name_ = jane_record.name.value
-phones_ = jane_record.add_phone("9876543210")
-birth_ = jane_record.days_to_birthday(1950, 11, 21)
-book.add_record(jane_record)
+# jane_record = Record("Jane")
+# Name_ = jane_record.name.value
+# phones_ = jane_record.add_phone("9876543210")
+# birth_ = jane_record.days_to_birthday(1950, 11, 21)
+# book.add_record(jane_record)
 
     # Виведення всіх записів у книзі
 print('Перегляд усіх записів за пошуковим словом')
@@ -232,17 +232,17 @@ for name, record in book.data.items():
         print(name, record)
 
     # Знаходження та редагування телефону для John
-john = book.find("John")
-john_record.edit_phone("1234567890", "1112223333")
-print('Зроблено заміну телефона для ', john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
+# john = book.find("John")
+# john_record.edit_phone("1234567890", "1112223333")
+# print('Зроблено заміну телефона для ', john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
     # Пошук конкретного телефону у записі John
-found_phone = book.find_phone('5555555555')
-print(f"'Знайдено телефон для ' {john}: {found_phone}")  # Виведення: 5555555555
-phones_ = john_record.remove_phone("1112223333")
+# found_phone = book.find_phone('5555555555')
+# print(f"'Знайдено телефон для ' {john}: {found_phone}")  # Виведення: 5555555555
+# phones_ = john_record.remove_phone("1112223333")
 
     # Видалення запису Jane
-book.delete("Jane")
+# book.delete("Jane")
 
 # ЗАПОВНЕННЯ АДРЕСНОЇ КНИГИ
 while True:
