@@ -62,6 +62,22 @@ class Birthday(Field):
         self.txt_valid = txt_valid         
         self.txt_valid = "Введіть день народження у такому форматі: спочатку РІК, потім місяць ММ, потім день ДД,\nнаприклад: 2000 12 31"
         return self.txt_valid
+    
+    
+class Email(Field):
+     # реалізація класу
+    def __init__(self, value):
+        self.validate(value)
+        super().__init__(value)   
+    def __str__(self):
+        self.email = self.value
+        return self.email        
+     
+        
+    def validate(self, txt_valid):   
+        self.txt_valid = txt_valid         
+        self.txt_valid = "Введіть електронну адресу латинськими літерами у такому форматі: name@name "
+        return self.txt_valid
    
 class Record:  
        
@@ -103,7 +119,17 @@ class Record:
             Birthday.validate(self, txt_valid)
             print(self.txt_valid)
             birth = []          
-        return birth                  
+        return birth                 
+    
+    
+    def add_email(self, email):                
+        print(email)
+        self.email = email                 
+        Email.validate(self, self.email)
+        self.email.append(self.email)        
+        emails_ = self.email        
+        return emails_
+     
         
     def remove_phone(self, phone):
         try:
@@ -136,7 +162,7 @@ class AddressBook(UserDict):
             
     def add_record(self, *argv, **kwarg):           
                     
-        self.data.update({Name_: phones_, Name_+'_день народження': str(birth_)}) 
+        self.data.update({Name_: phones_, Name_+'_день народження': str(birth_), 'Email': email_}) 
         
         file_name = 'data.json'        
         with open(file_name, "w") as fh:
@@ -202,6 +228,9 @@ phones = []
 phones_ = []
 phone = ''
 birth = []
+email = ''
+emails = []
+emails_ = []
 flag_new = 0
 
 book = AddressBook(data, phones)
@@ -212,6 +241,8 @@ Name_ = john_record.name.value
 john_record.add_phone("1234567890")
 phones_ = john_record.add_phone("0987654321")
 birth_ = john_record.days_to_birthday(2050, 12, 23)
+john_record.add_email("a.name@gmail.com")
+emails_ = john_record.add_email("a.name@knu.ua")
 
     # Додавання запису Приклад_запису_прізвище до адресної книги
 book.add_record(john_record)
@@ -263,6 +294,7 @@ while True:
     birth_yer = 0
     birth_mont = 0
     birth_day = 0
+    new_email = ''
     
     print("Введіть ім'я та натисність Enter: ")
     new_name = input()
@@ -305,6 +337,13 @@ while True:
         except ValueError:
             continue
         break 
+    
+    
+    print("Введіть електронну адресу латинськими літерами у такому форматі: name@name, натисність Enter: ")
+    new_email = input()
 
+    emails_ = new_record.add_email(new_email)
+    
     birth_ = new_record.days_to_birthday(birth_yer, birth_mont, birth_day)
+    emails_ = new_record.add_email(new_email)
     book.add_record(new_record)
