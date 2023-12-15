@@ -99,7 +99,7 @@ class Record:
             if dniv > 0:
                 print(f'До дня народження {Name_} залишилося днів - {dniv}')   
             birth = date(self.birth_yer, self.birth_mont, self.birth_day)
-        except:
+        except ValueError:
             Birthday.validate(self, txt_valid)
             print(self.txt_valid)
             birth = []          
@@ -276,14 +276,35 @@ while True:
     phones_ = new_record.add_phone(new_phone)
     
     print("Введіть дату народження.")
-    print("Рік? (чотири цифри + Enter): ")
-    birth_yer = int(input())
+    int_ = 0
+    while int_ != 1000:        
+        int_ += 1
+        print("Рік? (чотири цифри + Enter): ")
+        try:
+            birth_yer = int(input())
+        except ValueError:
+            continue
+        break
    
-    print("Місяць? (дві цифри + Enter): ")
-    birth_mont = int(input())
+    int_ = 0
+    while int_ != 1000:        
+        int_ += 1
+        print("Місяць? (дві цифри + Enter): ")
+        try:
+            birth_mont = int(input())
+        except ValueError:
+            continue
+        break
     
-    print("День? (дві цифри + Enter): ")
-    birth_day = int(input())    
+    int_ = 0
+    while int_ != 1000:        
+        int_ += 1
+        print("День? (дві цифри + Enter): ")
+        try:            
+            birth_day = int(input())
+        except ValueError:
+            continue
+        break 
 
     birth_ = new_record.days_to_birthday(birth_yer, birth_mont, birth_day)
     book.add_record(new_record)
