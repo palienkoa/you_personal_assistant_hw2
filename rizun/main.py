@@ -78,21 +78,39 @@ class Email(Field):
         while True:
             
             self.email = email
-            
+            name_split = self.email.split('@')
+            for n_sp in name_split:
+                pass
+            len_mail = len(self.email)            
             rah_1 = self.email.count('@')
             rah_2 = self.email.count(' ')
+            rah_3 = n_sp.count('.')
+            rah_4 = self.email.count(',')
             
-            if rah_2 == 0 and rah_1 == 1:
+            if len_mail > 4 and rah_2 == 0 and rah_1 == 1 and rah_3 > 0 and rah_4 == 0:
                 return self.email
             else:
-                print("Введіть електронну адресу латинськими літерами у такому форматі: name@name, натисність Enter: ")
+                print("Введіть електронну адресу латинськими літерами у такому форматі: name@name.name, натисність Enter: ")
                 email = input()
-   
+
+
+class Adress(Field):
+     # реалізація класу
+    def __init__(self, value):
+        self.validate(value)
+        super().__init__(value)   
+    def __str__(self):
+        self.adress = self.value
+        return self.adress        
+     
+      
 class Record:  
        
     def __init__(self, name):
         self.name = Name(name)        
         self.phones = []
+        self.emails = []
+        self.adress = ' '
                 
     # реалізація класу
         
@@ -100,7 +118,9 @@ class Record:
         
         self.phone = phone                 
         Phone.validate(self, self.phone)
-        self.phones.append(self.phone)        
+        
+        self.phones.append(self.phone)  
+            
         phones_ = self.phones        
         return phones_
     
@@ -132,13 +152,21 @@ class Record:
     
     
     def add_email(self, email):                
-        print(email)
+        
         self.email = email                 
         Email.validate(self, self.email)
-        #self.emails.append(self.email)        
-        emails_ = self.email        
+       
+        self.emails.append(self.email)      
+       
+        emails_ = self.emails        
         return emails_
-     
+    
+    def add_adress(self, adress):                
+        
+        self.adress = adress                 
+        
+        adress_ = self.adress        
+        return adress_ 
         
     def remove_phone(self, phone):
         try:
@@ -171,7 +199,7 @@ class AddressBook(UserDict):
             
     def add_record(self, *argv, **kwarg):           
                     
-        self.data.update({Name_: phones_, Name_+'_день народження': str(birth_), 'Email': emails_}) 
+        self.data.update({Name_: phones_, Name_+'_день народження': str(birth_), Name_+'_Email': emails_, Name_+'_Адреса': adress_}) 
         
         file_name = 'data.json'        
         with open(file_name, "w") as fh:
@@ -199,8 +227,14 @@ class AddressBook(UserDict):
                  
     
     def delete(self, rec):        
-        self.data.pop(rec)
-        self.data.pop(rec+'_день народження')
+        try:
+            self.data.pop(rec)
+            self.data.pop(rec+'_день народження')
+            self.data.pop(rec+'_Email')
+            self.data.pop(rec+'_Адреса')
+        except KeyError:
+            print("Немає такого імені")
+            return
         
         a_ = f'DELETED RECORD {rec}'
         print(a_)
@@ -240,20 +274,23 @@ birth = []
 email = ''
 emails = []
 emails_ = []
+adress_ = ' '
+adress = ' '
 flag_new = 0
 
 book = AddressBook(data, phones)
 
     # Створення першого зразкового запису для Приклад_запису_прізвище
-john_record = Record("Приклад_запису_прізвище")
+john_record = Record("Ім'я")
 Name_ = john_record.name.value
 john_record.add_phone("1234567890")
 phones_ = john_record.add_phone("0987654321")
 birth_ = john_record.days_to_birthday(2050, 12, 23)
 john_record.add_email("a.name@gmail.com")
 emails_ = john_record.add_email("a.name@knu.ua")
+adress_ = john_record.add_adress("Київ, вул. Київська, 1")
 
-    # Додавання запису Приклад_запису_прізвище до адресної книги
+    # Додавання запису Ім'я до книги контактів
 book.add_record(john_record)
 
     # Створення та додавання нового запису для Jane
@@ -284,19 +321,26 @@ for name, record in book.data.items():
     # Видалення запису Jane
 # book.delete("Jane")
 
-# ЗАПОВНЕННЯ АДРЕСНОЇ КНИГИ
+# ЗАПОВНЕННЯ КНИГИ КОНТАКТІВ
 while True:
     flag_new = 1
-    print('Заповнити адресну книгу? - Enter. Переглянути книгу? - r + Enter. Вийти? - q + Enter')
+    print(' ')
+    print('Заповнити книгу контактів? - Enter\nПереглянути книгу? - r + Enter\nВидалити запис? - d + Enter\nРедагувати запис? - ed + Enter\nВийти? - q + Enter')
     inp = input()
     if inp == 'q':        
         os.abort()
         
     if inp == 'r':
             
-    # ПОСТОРІНКОВИЙ ПЕРЕГЛЯД АДРЕСНОЇ КНИГИ
+    # ПОСТОРІНКОВИЙ ПЕРЕГЛЯД КНИГИ КОНТАКТІВ
         book.iterator(10)  
         continue   
+    
+    if inp == 'd':
+        print("Введіть ім'я для видалення запису")
+        imia = input()
+        book.delete(imia)
+        continue
 
     new_name = ''
     new_phone = ''
@@ -304,6 +348,7 @@ while True:
     birth_mont = 0
     birth_day = 0
     new_email = ''
+    new_adress = ' '
     
     print("Введіть ім'я та натисність Enter: ")
     new_name = input()
@@ -349,11 +394,12 @@ while True:
     
     birth_ = new_record.days_to_birthday(birth_yer, birth_mont, birth_day)
     
-    print("Введіть електронну адресу латинськими літерами у такому форматі: name@name, натисність Enter: ")
-    new_email = input()
-
-    emails_ = new_record.add_email(new_email)
+    print("Введіть електронну адресу латинськими літерами у такому форматі: name@name.name, натисність Enter: ")
+    new_email = input()      
+    emails_ = new_record.add_email(new_email)    
     
-    
+    print("Введіть адресу в довільному форматі та натисність Enter: ")
+    new_adress = input()
+    adress_ = new_record.add_adress(new_adress)  
     
     book.add_record(new_record)
