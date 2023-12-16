@@ -5,6 +5,9 @@ from datetime import date, datetime, timedelta
 import os
 import re
 import json
+from rich.console import Console
+from rich.markdown import Markdown
+console = Console()
 
 
 class Field:
@@ -128,21 +131,22 @@ class Record:
         txt_valid = ' '
         day_now = date.today() 
         rik = day_now.year
-        self.birth_yer = birth_yer
-        
-        self.birth_mont = birth_mont
-        
+        self.birth_yer = birth_yer        
+        self.birth_mont = birth_mont        
         self.birth_day = birth_day
+        print('')
+        console.print('У В А Г А !!!', style='bold red')
+        print('')
         
         try:
             birth = date(rik, self.birth_mont, self.birth_day)        
             dniv = int((birth - day_now).days)
             if dniv == 0:
-                print(f'Сьогодні день народження у {Name_}')
+                console.print(f'Сьогодні день народження у {Name_}', style='bold blue')
             if dniv < 0:    
-                print(f'У цьому році день народження у {Name_} вже минув')     
+                console.print(f'У цьому році день народження у {Name_} вже минув', style='reverse red')     
             if dniv > 0:
-                print(f'До дня народження {Name_} залишилося днів - {dniv}')   
+                console.print(f'До дня народження {Name_} залишилося днів - {dniv}', style='bold green')   
             birth = date(self.birth_yer, self.birth_mont, self.birth_day)
         except ValueError:
             Birthday.validate(self, txt_valid)
@@ -278,29 +282,28 @@ adress_ = ' '
 adress = ' '
 flag_new = 0
 
+print('')
+with open("README.md") as readme:
+    markdown = Markdown(readme.read())
+console.print(markdown, style='bold red')
+
+
 book = AddressBook(data, phones)
 
     # Створення першого зразкового запису для Приклад_запису_прізвище
-john_record = Record("Ім'я")
-Name_ = john_record.name.value
-john_record.add_phone("1234567890")
-phones_ = john_record.add_phone("0987654321")
-birth_ = john_record.days_to_birthday(2050, 12, 23)
-john_record.add_email("a.name@gmail.com")
-emails_ = john_record.add_email("a.name@knu.ua")
-adress_ = john_record.add_adress("Київ, вул. Київська, 1")
+# john_record = Record("Ім'я")
+# Name_ = john_record.name.value
+# john_record.add_phone("1234567890")
+# phones_ = john_record.add_phone("0987654321")
+# birth_ = john_record.days_to_birthday(2050, 12, 23)
+# john_record.add_email("a.name@gmail.com")
+# emails_ = john_record.add_email("a.name@knu.ua")
+# adress_ = john_record.add_adress("Київ, вул. Київська, 1")
 
-    # Додавання запису Ім'я до книги контактів
-book.add_record(john_record)
+#     # Додавання запису Ім'я до книги контактів
+# book.add_record(john_record)
 
-    # Створення та додавання нового запису для Jane
-# jane_record = Record("Jane")
-# Name_ = jane_record.name.value
-# phones_ = jane_record.add_phone("9876543210")
-# birth_ = jane_record.days_to_birthday(1950, 11, 21)
-# book.add_record(jane_record)
-
-    # Виведення всіх записів у книзі
+   # Виведення всіх записів у книзі
 print('Перегляд усіх записів за пошуковим словом')
 nme = input()
 for name, record in book.data.items():
@@ -308,19 +311,46 @@ for name, record in book.data.items():
         print('ЗНАЙДЕНО ЗАПИС: ')
         print(name, record)
 
-    # Знаходження та редагування телефону для John
+    # Знаходження та заміна телефону для John
 # john = book.find("John")
 # john_record.edit_phone("1234567890", "1112223333")
 # print('Зроблено заміну телефона для ', john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
-    # Пошук конкретного телефону у записі John
+    # Пошук та видалення конкретного телефону у записі John 
 # found_phone = book.find_phone('5555555555')
 # print(f"'Знайдено телефон для ' {john}: {found_phone}")  # Виведення: 5555555555
 # phones_ = john_record.remove_phone("1112223333")
 
-    # Видалення запису Jane
-# book.delete("Jane")
+# УСІ ДНІ НАРОДЖЕННЯ
 
+print('')
+console.print('У В А Г А !!!', style='bold red')
+
+day_now = date.today()
+rik = day_now.year
+db = "_день народження"
+
+file_name = 'data.json'
+with open(file_name, "r") as fh:        
+    unpacked = json.load(fh)    
+
+for key_birth, val_birth in unpacked.items():
+   
+    if db in key_birth:
+        ind = key_birth.index(db)
+        name_birth = key_birth[0:ind]
+        misiac = int(val_birth[5:7])
+        den = int(val_birth[8:10])
+        
+        data_birth_1 = date(rik, misiac, den)        
+        dniv = int((data_birth_1 - day_now).days)
+        if dniv == 0:
+            console.print(f'Сьогодні день народження у {name_birth}', style='bold blue')
+        if dniv < 0:    
+            console.print(f'У цьому році день народження у {name_birth} вже минув', style='reverse red')     
+        if dniv > 0:
+            console.print(f'До дня народження {name_birth} залишилося днів - {dniv}', style='bold green')
+     
 # ЗАПОВНЕННЯ КНИГИ КОНТАКТІВ
 while True:
     flag_new = 1
@@ -340,6 +370,11 @@ while True:
         print("Введіть ім'я для видалення запису")
         imia = input()
         book.delete(imia)
+        continue
+    
+    if inp == 'ed':
+        print('')
+        
         continue
 
     new_name = ''
