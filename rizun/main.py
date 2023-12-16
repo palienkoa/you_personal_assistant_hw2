@@ -74,10 +74,19 @@ class Email(Field):
         return self.email        
      
         
-    def validate(self, txt_valid):   
-        self.txt_valid = txt_valid         
-        self.txt_valid = "Введіть електронну адресу латинськими літерами у такому форматі: name@name "
-        return self.txt_valid
+    def validate(self, email):    
+        while True:
+            
+            self.email = email
+            
+            rah_1 = self.email.count('@')
+            rah_2 = self.email.count(' ')
+            
+            if rah_2 == 0 and rah_1 == 1:
+                return self.email
+            else:
+                print("Введіть електронну адресу латинськими літерами у такому форматі: name@name, натисність Enter: ")
+                email = input()
    
 class Record:  
        
@@ -126,7 +135,7 @@ class Record:
         print(email)
         self.email = email                 
         Email.validate(self, self.email)
-        self.email.append(self.email)        
+        #self.emails.append(self.email)        
         emails_ = self.email        
         return emails_
      
@@ -162,7 +171,7 @@ class AddressBook(UserDict):
             
     def add_record(self, *argv, **kwarg):           
                     
-        self.data.update({Name_: phones_, Name_+'_день народження': str(birth_), 'Email': email_}) 
+        self.data.update({Name_: phones_, Name_+'_день народження': str(birth_), 'Email': emails_}) 
         
         file_name = 'data.json'        
         with open(file_name, "w") as fh:
@@ -338,12 +347,13 @@ while True:
             continue
         break 
     
+    birth_ = new_record.days_to_birthday(birth_yer, birth_mont, birth_day)
     
     print("Введіть електронну адресу латинськими літерами у такому форматі: name@name, натисність Enter: ")
     new_email = input()
 
     emails_ = new_record.add_email(new_email)
     
-    birth_ = new_record.days_to_birthday(birth_yer, birth_mont, birth_day)
-    emails_ = new_record.add_email(new_email)
+    
+    
     book.add_record(new_record)
