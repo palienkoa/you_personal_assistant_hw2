@@ -1,8 +1,5 @@
-from rich.console import Console
-from rich.markdown import Markdown
-
-console = Console()
-with open("README.md") as readme:
-    markdown = Markdown(readme.read())
-
-console.print(markdown, style='bold red')
+a = ['12345', '3456']
+tel = ''
+for x in a:
+    tel += f'{x}\n'  
+print(tel)

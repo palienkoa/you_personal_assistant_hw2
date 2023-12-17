@@ -7,6 +7,7 @@ import re
 import json
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.table import Table
 console = Console()
 
 
@@ -142,11 +143,11 @@ class Record:
             birth = date(rik, self.birth_mont, self.birth_day)        
             dniv = int((birth - day_now).days)
             if dniv == 0:
-                console.print(f'Сьогодні день народження у {Name_}', style='bold blue')
+                console.print(f'Сьогодні день народження у [yellow]{Name_}[/yellow]', style='bold blue')
             if dniv < 0:    
                 console.print(f'У цьому році день народження у {Name_} вже минув', style='reverse red')     
             if dniv > 0:
-                console.print(f'До дня народження {Name_} залишилося днів - {dniv}', style='bold green')   
+                console.print(f'До дня народження [red]{Name_}[/red] залишилося днів - {dniv}', style='bold green')   
             birth = date(self.birth_yer, self.birth_mont, self.birth_day)
         except ValueError:
             Birthday.validate(self, txt_valid)
@@ -240,7 +241,7 @@ class AddressBook(UserDict):
             print("Немає такого імені")
             return
         
-        a_ = f'DELETED RECORD {rec}'
+        a_ = f'[red]DELETED RECORD[/red] {rec}'
         print(a_)
         
         file_name = 'data.json'        
@@ -259,10 +260,10 @@ class AddressBook(UserDict):
             counter_ += 1
             counterr_ += 1
             if  counterr_ == len_data:
-                print(resultt)
+                console.print(resultt)
                 return
             if counter_ == self.item_number:                
-                print(resultt)         
+                console.print(resultt)         
                 counter_ = 0
                 resultt = ''
                 print('Продовжити перегляд? Натисніть ENTER')
@@ -282,33 +283,26 @@ adress_ = ' '
 adress = ' '
 flag_new = 0
 
-print('')
+lich = 0
+while lich < 20:
+    lich += 1
+    print('')
 with open("README.md") as readme:
     markdown = Markdown(readme.read())
 console.print(markdown, style='bold red')
-
+lich = 0
+while lich < 10:
+    lich += 1
+    print('')
 
 book = AddressBook(data, phones)
-
-    # Створення першого зразкового запису для Приклад_запису_прізвище
-# john_record = Record("Ім'я")
-# Name_ = john_record.name.value
-# john_record.add_phone("1234567890")
-# phones_ = john_record.add_phone("0987654321")
-# birth_ = john_record.days_to_birthday(2050, 12, 23)
-# john_record.add_email("a.name@gmail.com")
-# emails_ = john_record.add_email("a.name@knu.ua")
-# adress_ = john_record.add_adress("Київ, вул. Київська, 1")
-
-#     # Додавання запису Ім'я до книги контактів
-# book.add_record(john_record)
 
    # Виведення всіх записів у книзі
 print('Перегляд усіх записів за пошуковим словом')
 nme = input()
 for name, record in book.data.items():
     if nme in name or nme in record:
-        print('ЗНАЙДЕНО ЗАПИС: ')
+        console.print('ЗНАЙДЕНО ЗАПИС: ', style='bold yellow')
         print(name, record)
 
     # Знаходження та заміна телефону для John
@@ -345,20 +339,60 @@ for key_birth, val_birth in unpacked.items():
         data_birth_1 = date(rik, misiac, den)        
         dniv = int((data_birth_1 - day_now).days)
         if dniv == 0:
-            console.print(f'Сьогодні день народження у {name_birth}', style='bold blue')
+            console.print(f'Сьогодні день народження у [yellow]{name_birth}[/yellow]', style='bold blue')
         if dniv < 0:    
             console.print(f'У цьому році день народження у {name_birth} вже минув', style='reverse red')     
         if dniv > 0:
-            console.print(f'До дня народження {name_birth} залишилося днів - {dniv}', style='bold green')
+            console.print(f'До дня народження [red]{name_birth}[/red] залишилося днів - {dniv}', style='bold green')
      
 # ЗАПОВНЕННЯ КНИГИ КОНТАКТІВ
 while True:
     flag_new = 1
     print(' ')
-    print('Заповнити книгу контактів? - Enter\nПереглянути книгу? - r + Enter\nВидалити запис? - d + Enter\nРедагувати запис? - ed + Enter\nВийти? - q + Enter')
+    print('Заповнити книгу контактів? - Enter\nВивести повний запис за іменем? - f + Enter\nПереглянути книгу? - r + Enter\nВидалити запис? - d + Enter\nРедагувати запис? - ed + Enter\nВийти? - q + Enter')
     inp = input()
     if inp == 'q':        
         os.abort()
+ 
+ # ВІДКРИТТЯ ПОВНОГО ЗАПИСУ ЗА ІМЕНЕМ       
+    if inp == 'f':
+        telef = ''
+        maill = ''
+        dat_birth = ''
+        adr = ''
+        print("Введіть ім'я для виведення повного запису: ")
+        nme = input()
+        lich = 0   
+        for name, record  in book.data.items():                                 
+            if lich == 0:        
+                for teleff in record:
+                    telef += f"{teleff}\n"                        
+                    lich += 1           
+                continue
+            if lich == 1:
+                dat_birth = record
+                lich += 1  
+                continue 
+            if 'Email' in name:
+                for mailll in record:
+                    maill += f"{mailll}\n"                 
+                continue
+            if 'Адреса' in name:
+                adr = record
+                break
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Ім'я", style="dim", width=12)
+        table.add_column("Телефон", width=23)
+        table.add_column("День народження", justify="right")
+        table.add_column("Email", justify="left", width=23)
+        table.add_column("Адреса", justify="left", width=23)
+        table.add_row(nme, telef, dat_birth, maill, adr)
+                
+        console.print('ЗНАЙДЕНО ЗАПИС: ', style='bold yellow')
+        console.print(table)
+        
+        continue
+        
         
     if inp == 'r':
             
@@ -366,17 +400,21 @@ while True:
         book.iterator(10)  
         continue   
     
+    # ВИДАЛЕННЯ ЗАПИСУ
     if inp == 'd':
         print("Введіть ім'я для видалення запису")
         imia = input()
         book.delete(imia)
         continue
     
+    # РЕДАГУВАННЯ ЗАПИСУ
     if inp == 'ed':
-        print('')
-        
+        console.print('ЯК БУДЕМО РЕДАГУВАТИ? ', style='bold yellow')   
+        console.print("[red]1.[/red] Змінити ім'я? - натисни номер та Enter\n[blue]2.[/blue] Видалити телефон? - натисни номер та Enter\n[green]3.[/green] Додати телефон? - натисни номер та Enter\n[yellow]4.[/yellow] Видалити email? - натисни номер та Enter\n[red]5.[/red] Додати email? - натисни номер та Enter\n[blue]6.[/blue] Редагувати адресу? - натисни номер та Enter\n[green]7.[/green] Змінити день народження? - натисни номер та Enter\n[reverse]8.[/reverse] Вийти з режиму редагування? - натисни номер та Enter")
+        inp = input()     
         continue
 
+# Основний блок заповнення Книги контактів
     new_name = ''
     new_phone = ''
     birth_yer = 0
