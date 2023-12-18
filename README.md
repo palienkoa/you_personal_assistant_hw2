@@ -39,7 +39,7 @@ It's a Python application that provides functionality to manage an address book,
 
 - Sort any "junk" folder into easily managable subcategory folders like IMAGES, VIDEOS, AUDIO, DOCUMENTS, ARCHIVES and OTHER
 
- ##Installation
+ ## Installation
  
  1. Download provided package file your_personal_assistant.zip
  2. Unzip the package
