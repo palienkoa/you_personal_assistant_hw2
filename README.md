@@ -34,3 +34,13 @@ It's a Python application that provides functionality to manage an address book,
 - Search for notes by tags.
 - View all notes.
 - Edit or delete notes.
+
+- ### Folder sorting
+
+- Sort any "junk" folder into easily managable subcategory folders like IMAGES, VIDEOS, AUDIO, DOCUMENTS, ARCHIVES and OTHER
+
+ ##Installation
+ 
+ 1. Download provided package file your_personal_assistant.zip
+ 2. Unzip the package
+ 3. Install the package, by navigating to the folder from previous step and running command: ```pip install .``` 
