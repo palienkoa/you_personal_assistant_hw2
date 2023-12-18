@@ -30,6 +30,7 @@ class Name(Field):
 
 class Phone(Field):
     # реалізація класу
+    
     def __init__(self, value):
         
         self.phone = value
@@ -38,7 +39,7 @@ class Phone(Field):
             
          
     def validate(self, phone):
-            
+          
         while True:
             
             self.phone = phone            
@@ -46,11 +47,12 @@ class Phone(Field):
             symb = str(self.phone).isnumeric()
             
             if long_ == 10 and symb == True:
+                
                 return self.phone
             else:
                 print("Введіть номер телефона без пробілів, символів, має бути 10 цифр, натисність Enter: ")
                 phone = input()
-                            
+                                            
                 
 class Birthday(Field):
 #     # реалізація класу
@@ -284,6 +286,7 @@ adress = ' '
 name_new = ''
 flag_new = 0
 
+
 # Запуск коду. Привітання, знаходиться у файлі README.md, який має бути у папці коду
 lich = 0
 while lich < 20:
@@ -417,10 +420,14 @@ while True:
         
         if inp == '1':
             
-            print("Введіть телефон, який треба видалити. ")
+            print("Введіть телефон, який треба видалити: ")
             phone = input()
-            phonee = Phone(Field)
-            phonee.validate(phone)
+            print(type(phone))
+            phonee = Phone(phone)
+            
+            #print(phone)
+            #Phone.validate(phone)
+            
            
             fg = f'sssssffffff {phone}'
             print(fg)
@@ -431,6 +438,7 @@ while True:
             with open(file_name, "w") as fh:
                 json.dump(data, fh) 
             continue
+        
         if inp == '2':
             continue
         if inp == '3':
