@@ -7,7 +7,7 @@ class Note:
         self.title = title
         self.body = body
         if tags:
-            self.tags.update(tags)
+            self.tags.add(tags)
         else:
             self.tags = set()
 
@@ -17,6 +17,9 @@ class Note:
             return True
         else:
             return False
+    
+    def __str__(self) -> str:
+        return f"{self.title}: {self.body}"
         
 
 #клас нотатника, робить всі необхідні дії пов"язані з нотатками + робота з тегами
@@ -34,11 +37,10 @@ class Notes:
     
     #знаходить нотатку за заданою строкою, якщо знайшли повертає об"єкт нотатки, якщо ні - None
     def find_note(self, search_text:str):
-        for note in self.notes:
+        for note in self.notes.values():
             if note.search(search_text):
                 return note
-            else:
-                return None
+        return None#якщо не знайшли
 
     #службовий метод, при додаванні тега у нотатку також оновлює словник тегів/нотатків нотатника        
     def _add_to_tags_dictionary(self, tag:str, title:str):
@@ -62,6 +64,27 @@ class Notes:
             return f"Tag {tag} succesfully added to note {title}"
         else:
             return f"Note '{title}' not found"
+    
+    #method to find notes by tag
+    def search_by_tag(self, tag:str):
+        found_notes = []
+        if tag in self.tags_dictionary.keys():
+            for title in self.tags_dictionary.get(tag):
+                found_notes.append(self.notes.get(title))
+            return found_notes
+        else:
+            return []
+
+    #виводить список всіх нотатків відсортований за кількістю тегів    
+    def sort_by_tags(self):
+
+        notes = []
+        for _, n in self.notes.items():
+            notes.append(n)
+        sorted_notes = sorted(notes, key=lambda note: len(note.tags), reverse=True)
+        print("Notes sorted by number of tags):")
+        for i, note in enumerate(sorted_notes, 1):
+            print(f"Title: {note.title}| Number of tags: {len(note.tags)}| Note: {note.body}")
 
     #шукає нотатку з заданим заголовком, якщо знайшли - видаляємо, повертає строку з описом результату             
     def delete_note(self, title:str):
@@ -89,5 +112,3 @@ class Notes:
     #повертає список усіх тегів    
     def get_all_tags(self):
         return list(self.tags_dictionary.keys())
-
-
