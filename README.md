@@ -1,81 +1,81 @@
-# Your Personal Assistant
+# Ваш особистий асистент
 
-It's a Python application that provides functionality to manage an address book, take notes and sort any folder with mixed files. The application allows you to manage contact records, add and remove phone numbers and email addresses, manage birthdays and addresses, and search for records based on various criteria. Also, you can create and manage notes, add desired tags and search for notes by any keyword or tag. Finally, the application can sort any folder with different file types into  easily managable categories like images, video, documents etc.
+Це Python-додаток, який надає функціонал для управління адресною книгою, створення нотаток і сортування будь-якої теки з різними файлами. Додаток дозволяє керувати контактними записами, додавати та видаляти номери телефонів та електронні адреси, управляти днями народження та адресами, а також шукати записи за різними критеріями. Також ви можете створювати та управляти нотатками, додавати бажані теги і шукати нотатки за будь-яким ключовим словом або тегом. Нарешті, додаток може сортувати будь-яку теку з різними типами файлів в зручні підпапки, такі як зображення, відео, документи і т. д.
 
 ## Table of Contents
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Commands](#commands)
+- [Функціонал](#функціонал)
+- [Встановлення](#встановлення)
+- [Використання](#використання)
+- [Команди](#команди)
 
-## Features
+## Функціонал
 
-### Address Book Management
+### Управління Адресною Книгою
 
-- Create and manage contact records with the following information:
-  - Name
-  - Phone numbers
-  - Email addresses
-  - Birthday
-  - Address
-- Edit and delete contact records.
-- Add, edit, or delete phone numbers and email addresses for a contact.
-- Set or remove a birthday for a contact.
-- Set or remove an address for a contact.
-- Search for contact records based on a search string.
-- List upcoming birthdays within a specified number of days.
-- View all contact records.
+- Створення та управління контактними записами з наступною інформацією:
+  - Ім'я
+  - Номери телефонів
+  - Електронні адреси
+  - День народження
+  - Адреса
+- Редагування та видалення контактних записів.
+- Додавання, редагування або видалення номерів телефонів та електронних адрес для контакту.
+- Встановлення чи видалення дня народження для контакту.
+- Встановлення чи видалення адреси для контакту.
+- Пошук контактів за рядком пошуку.
+- Перегляд надходжень днів народження протягом визначеної кількості днів.
+- Перегляд усіх контактних записів.
 
-- ### Notes Management
+### Управління Нотатками
 
-- Create and manage notes with content and tags.
-- Search for words my any keyword in the title or the note itself.
-- Search for notes by tags.
-- View all notes.
-- Edit or delete notes.
+- Створення та управління нотатками з вмістом та тегами.
+- Пошук слів за будь-яким ключовим словом у назві або самій нотатці.
+- Пошук нотаток за тегами.
+- Перегляд усіх нотаток.
+- Редагування або видалення нотаток.
 
-- ### Folder sorting
+### Сортування теки
 
-- Sort any "junk" folder into easily managable subcategory folders like IMAGES, VIDEOS, AUDIO, DOCUMENTS, ARCHIVES and OTHER
+- Сортування будь-якої теки "звалища" на підкатегорії, такі як ЗОБРАЖЕННЯ, ВІДЕО, АУДІО, ДОКУМЕНТИ, АРХІВИ та ІНШЕ
 
-## Installation
+## Встановлення
 
- 1. Download provided package file your_personal_assistant.zip
- 2. Unzip the package
- 3. Install the package, by navigating to the folder from previous step and running command: ```pip install .``` 
+ 1. Завантажте наданий файл пакету your_personal_assistant.zip
+ 2. Розпакуйте архів
+ 3. Встановіть пакет, перейшовши в папку з попереднього кроку і використовуючи команду: ```pip install .```
 
-## Usage
+## Використання
 
-1. Run the application by executing command ```my_assistant``` in the terminal.
+ 1. Запустіть додаток, виконавши команду ```my_assistant``` в терміналі.
 
-## Commands
-The application supports the following commands:
+## Команди
+Додаток підтримує наступні команди:
 
-- add [Name]: Create a new contact record with the specified name.
-- edit [Name] [new_Name]: Edit the name of a contact record.
-- del [Name]: Remove a contact record.
-- add-phone [Name] [Phone]: Add a phone number to a contact.
-- edit-phone [Name] [Phone] [new_Phone]: Replace a phone number in a contact.
-- del-phone [Name] [Phone]: Remove a phone number from a contact.
-- add-email [Name] [Email]: Add an email address to a contact.
-- edit-email [Name] [Email] [new_Email]: Replace an email address in a contact.
-- del-email [Name] [Email]: Remove an email address from a contact.
-- birthday [Name] [Birthday]: Set a birthday for a contact.
-- del-birthday [Name]: Remove a birthday from a contact.
-- address [Name] [Address]: Set an address for a contact.
-- del-address [Name]: Remove an address from a contact.
-- find [searchstring]: Search for contact records based on a search string.
-- help: Display a list of available commands.
-- add-note: Add a note to Note Book.
-- all-notes: List all notes
-- del-note [Note_title]: Remove note from Note Book
-- add-tag [Note_id] [Tag]: Add tag to note
-- del-tag [Note_id] [Tag]: Remove tag from note
-- find-notes [searchstring]: List all notes with search string data in note and tags
-- find-tag [searchstring]: List all notes with search string data in tags
-- sort-tag: ???
-- show-all-tags: Lists all saved tags
-- next-birthdays [int]: Show upcoming birthdays within the specified number of days.
-- show-all: List all contact records.
-- close,exit or bye: Exit the application.
+- add [Ім'я]: Створити новий контактний запис із зазначеним ім'ям.
+- edit [Ім'я] [нове_Ім'я]: Змінити ім'я контактного запису.
+- del [Ім'я]: Видалити контактний запис.
+- add-phone [Ім'я] [Телефон]: Додати номер телефону до контакту.
+- edit-phone [Ім'я] [Телефон] [новий_Телефон]: Замінити номер телефону у контакті.
+- del-phone [Ім'я] [Телефон]: Видалити номер телефону з контакту.
+- add-email [Ім'я] [Електронна_пошта]: Додати електронну адресу до контакту.
+- edit-email [Ім'я] [Електронна_пошта] [нова_Електронна_пошта]: Замінити електронну адресу у контакті.
+- del-email [Ім'я] [Електронна_пошта]: Видалити електронну адресу з контакту.
+- birthday [Ім'я] [День_народження]: Встановити день народження для контакту.
+- del-birthday [Ім'я]: Видалити день народження з контакту.
+- address [Ім'я] [Адреса]: Встановити адресу для контакту.
+- del-address [Ім'я]: Видалити адресу з контакту.
+- find [рядок_пошуку]: Пошук контактних записів за рядком пошуку.
+- help: Відображення списку доступних команд.
+- add-note: Додати нотатку в Блокнот.
+- all-notes: Перелічити всі нотатки
+- del-note [Назва_нотатки]: Видалити нотатку з Блокнота
+- add-tag [ID_нотатки] [Тег]: Додати тег до нотатки
+- del-tag [ID_нотатки] [Тег]: Видалити тег з нотатки
+- find-notes [рядок_пошуку]: Перелік всіх нотаток із даними рядка пошуку в нотатці та тегах
+- find-tag [рядок_пошуку]: Перелік всіх нотаток із даними рядка пошуку в тегах
+- sort-tag: Виводить список нотаток відсортований за кількістю тегів
+- show-all-tags: Перелічити всі збережені теги
+- next-birthdays [ціле_число]: Показати надходження днів народження протягом вказаної кількості днів.
+- show-all: Перелічити всі контактні записи.
+- close,exit або bye: Вийти з додатка.
