@@ -39,8 +39,43 @@ It's a Python application that provides functionality to manage an address book,
 
 - Sort any "junk" folder into easily managable subcategory folders like IMAGES, VIDEOS, AUDIO, DOCUMENTS, ARCHIVES and OTHER
 
- ## Installation
- 
+## Installation
+
  1. Download provided package file your_personal_assistant.zip
  2. Unzip the package
  3. Install the package, by navigating to the folder from previous step and running command: ```pip install .``` 
+
+## Usage
+
+1. Run the application by executing command ```my_assistant``` in the terminal.
+
+## Commands
+The application supports the following commands:
+
+- add [Name]: Create a new contact record with the specified name.
+- edit [Name] [new_Name]: Edit the name of a contact record.
+- del [Name]: Remove a contact record.
+- add-phone [Name] [Phone]: Add a phone number to a contact.
+- edit-phone [Name] [Phone] [new_Phone]: Replace a phone number in a contact.
+- del-phone [Name] [Phone]: Remove a phone number from a contact.
+- add-email [Name] [Email]: Add an email address to a contact.
+- edit-email [Name] [Email] [new_Email]: Replace an email address in a contact.
+- del-email [Name] [Email]: Remove an email address from a contact.
+- birthday [Name] [Birthday]: Set a birthday for a contact.
+- del-birthday [Name]: Remove a birthday from a contact.
+- address [Name] [Address]: Set an address for a contact.
+- del-address [Name]: Remove an address from a contact.
+- find [searchstring]: Search for contact records based on a search string.
+- help: Display a list of available commands.
+- add-note: Add a note to Note Book.
+- all-notes: List all notes
+- del-note [Note_title]: Remove note from Note Book
+- add-tag [Note_id] [Tag]: Add tag to note
+- del-tag [Note_id] [Tag]: Remove tag from note
+- find-notes [searchstring]: List all notes with search string data in note and tags
+- find-tag [searchstring]: List all notes with search string data in tags
+- sort-tag: ???
+- show-all-tags: Lists all saved tags
+- next-birthdays [int]: Show upcoming birthdays within the specified number of days.
+- show-all: List all contact records.
+- close,exit or bye: Exit the application.

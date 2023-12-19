@@ -17,6 +17,9 @@ class Note:
             return True
         else:
             return False
+    
+    def __str__(self) -> str:
+        return f"{self.title}: {self.body}"
         
 
 #клас нотатника, робить всі необхідні дії пов"язані з нотатками + робота з тегами
@@ -62,6 +65,16 @@ class Notes:
             return f"Tag {tag} succesfully added to note {title}"
         else:
             return f"Note '{title}' not found"
+    
+    #method to find notes by tag
+    def search_by_tag(self, tag:str):
+        found_notes = []
+        if tag in self.tags_dictionary.keys():
+            for title in self.tags_dictionary.get(tag):
+                found_notes.append(self.notes.get(title))
+            return found_notes
+        else:
+            return []
 
     #шукає нотатку з заданим заголовком, якщо знайшли - видаляємо, повертає строку з описом результату             
     def delete_note(self, title:str):
