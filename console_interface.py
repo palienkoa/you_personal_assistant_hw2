@@ -50,6 +50,8 @@ class ConsoleInterface:
         "show-notes",
         "add-tag",
         "find-tag",
+        "sort-tag",
+        "show-all-tags",       
         "sort-tag",        
         "sort-folder",
         "help",
@@ -67,7 +69,9 @@ class ConsoleInterface:
             if choice == "add-contact":
                 self.add_contact()
             elif choice == "edit-contact":
-                self.add_phone()
+                self.edit_contact()
+            elif choice == "find-contact":
+                self.find_contact()
             elif choice == "del-contact":
                 self.add_phone()
             elif choice == "show-all":
@@ -80,6 +84,18 @@ class ConsoleInterface:
                 self.add_address()
             elif choice == "add-birthday":
                 self.add_birthday()
+            elif choice == "edit-phone":
+                self.edit_phone()
+            elif choice == "edit-email":
+                self.edit_email()
+            elif choice == "del-phone":
+                self.del_phone()
+            elif choice == "del-email":
+                self.del_email()
+            elif choice == "del-address":
+                self.del_address()
+            elif choice == "del-birthday":
+                self.del_birthday()
             #КОМАНДИ НОТАТОК
             #HHHHHHHHHHHHHHH
             elif choice == "add-note":
@@ -96,6 +112,8 @@ class ConsoleInterface:
                 self.sort_tag()
             elif choice == "show-notes":
                 self.show_notes()
+            elif choice == "show-all-tags":
+                self.show_all_tags()
             #СОРТУВАННЯ
             elif choice == "sort-folder":
                 name = input("Введіть повний шлях до папки: ")
@@ -170,7 +188,7 @@ class ConsoleInterface:
             table.add_column("Адреса", justify="left")
             
             for contact in contacts:
-                table.add_row(contact.name.value, *contact.phones, *contact.emails, contact.adress)
+                table.add_row(contact.name.value, ",".join(contact.phones), ",".join(contact.emails), contact.adress)
                 table.add_section()
                 # print(contact)
             console.print(table)
@@ -238,8 +256,12 @@ class ConsoleInterface:
         #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
         pass 
     
-    def show_next_birthdays():
+    def show_next_birthdays(self):
         #TODO
+        dniv = input("Введіть кількість днів: ")
+        for record in self.address_book.values():
+            if record.days_to_birthday() < dniv:
+                print(record)
         pass   
 
         #МЕТОДИ НОТАТОК
@@ -264,14 +286,15 @@ class ConsoleInterface:
         if not result:
             print("Записи не знайдено")
         else:
-            table.add_row(result.title, result.body, str(*result.tags))
+            table.add_row(result.title, result.body, ",".join(list(result.tags)))
 
         console.print(table)    
         # print(result)
     
     def del_note(self):
-        #TODO
-        pass
+        notes_completer = WordCompleter(list(self.notebook.notes.keys()))
+        name = prompt("Введіть назву нотатки для видалення: ", completer=notes_completer)
+        self.notebook.delete_note(name)
 
     def show_notes(self):
 
@@ -285,30 +308,61 @@ class ConsoleInterface:
             table.add_column("ТЕГИ", justify="left")
 
             for note in self.notebook.notes.values():
-                table.add_row(note.title, note.body, str(note.tags))
+                table.add_row(note.title, note.body, ",".join(list(note.tags)))
                 table.add_section()
 
             console.print(table)
             
     def add_tag(self):
-        #TODO
-        pass
+        notes_completer = WordCompleter(list(self.notebook.notes.keys()))
+        name = prompt("Введіть імя нотатки: ", completer=notes_completer).strip()
+        result = self.notebook.find_note(name)
+        if result:
+            tags_completer = WordCompleter(list(self.notebook.tags_dictionary.keys()))
+            tag = prompt("Введіть тег: ", completer=tags_completer).strip()
+            self.notebook.add_tag(name, tag)
     
     def find_tag(self):
-        #TODO
-        pass
+        tags_completer = WordCompleter(list(self.notebook.tags_dictionary.keys()))
+        tag = prompt("Введіть тег: ", completer=tags_completer).strip()
+        result = self.notebook.search_by_tag(tag)
+        if not len(result):
+            print('Такого тегу в базі даних немає')
+            return
+        #прописування колонок
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("ЗАГОЛОВОК", style="dim", width=10) # ширину можете міняти, назви колонок також
+        table.add_column("НОТАТКА", width=25)
+        table.add_column("ТЕГИ", justify="left")
+        
+        for note in result:
+            table.add_row(note.title, note.body, ",".join(list(note.tags)))
+            table.add_section()
+
+        console.print(table)
+        
     
     def sort_tag(self):
-        #TODO
-        pass
-    
+        result = self.notebook.sort_by_tags()
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("ЗАГОЛОВОК", style="dim", width=10) # ширину можете міняти, назви колонок також
+        table.add_column("НОТАТКА", width=25)
+        table.add_column("ТЕГИ", justify="left")
+        
+        for note in result:
+            table.add_row(note.title, note.body, ",".join(list(note.tags)))
+            table.add_section()
+
+        console.print(table)
+        
     def del_tag(self):
-        #TODO
-        pass
+        tags_completer = WordCompleter(list(self.notebook.tags_dictionary.keys()))
+        tag = prompt("Введіть тег: ", completer=tags_completer).strip()
+        # self.notebook.delete_tag(tag)
+        print(f"Тег {tag} видалено")#не готово
     
     def show_all_tags(self):
-        #TODO
-        pass
+        print(self.notebook.get_all_tags())
 
 if __name__ == "__main__":
     console_interface = ConsoleInterface()
