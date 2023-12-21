@@ -91,10 +91,18 @@ class ConsoleInterface:
         return bool(data)
 
     def show_contacts(self):
-        contacts = self.address_book.data
+        contacts = list(self.address_book.data.values())
         if contacts:
+            table = Table(show_header=True, header_style="bold magenta")
+            table.add_column("Iм'я", style="dim", width=10) # ширину можете міняти, назви колонок також
+            table.add_column("Телефони", width=25)
+            table.add_column("Адреса", justify="left")
+            
             for contact in contacts:
-                print(contact)
+                table.add_row(contact.name.value, *contact.phones, str(contact.adress))
+                table.add_section()
+                # print(contact)
+            console.print(table)
         else:
             print("Немає жодного контакту.")
 
@@ -111,20 +119,16 @@ class ConsoleInterface:
         if not self.notebook.notes:
             print("Немає жодної нотатки.")
         else:
-            # ФОРМУВАННЯ ТАБЛИЦІ
             #прописування колонок
             table = Table(show_header=True, header_style="bold magenta")
             table.add_column("ЗАГОЛОВОК", style="dim", width=10) # ширину можете міняти, назви колонок також
             table.add_column("НОТАТКА", width=25)
             table.add_column("ТЕГИ", justify="left")
-            # прописування рядів, думаю, можна через For...  або чітко прописати стільки рядів, скільки вам треба,
-            # тільки змінні тоді треба нумерувати чи якось так
-            # table.add_row(zaholovok, notatka, teh)
-            # table.add_row(zaholovok, notatka, teh)
+
             for note in self.notebook.notes.values():
                 table.add_row(note.title, note.body, str(note.tags))
-                # print(note)
-            # ВИВЕСТИ ТАБЛИЦЮ
+                table.add_section()
+
             console.print(table)
 
 if __name__ == "__main__":
