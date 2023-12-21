@@ -1,6 +1,5 @@
 from modules.address_book import AddressBook, Record
 from modules.notes import Notes, Note
-from modules.banch import SearchContact
 from modules.file_manager import FileManager 
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
@@ -16,48 +15,85 @@ class ConsoleInterface:
         self.notebook = Notes()
         self.notebook.load()
         
+    def is_not_empty(self, data):
+        # Перевірка, чи дані не є порожніми
+        return bool(data)
+    
+    def help():
+        #TODO
+        #ПРИНТУВАТИ СПИСОК КОМАНД, МОЖНА ВЗЯТИ ІЗ РІДМІ.МД
+        pass
+        
 
     def run(self):
         commands = [
         "add-contact",
-        "add-note",
-        "all-notes",
+        "edit-contact",
+        "del-contact",
         "show-all",
         "add-phone",
         "add-email",
         "add-address",
+        #notes section, del comment later
+        "add-note",
+        "all-notes",
         "add-tag",
-        "bye",
+        "find-notes",
+        #other, del later
         "sort-folder",
-        "find-notes"
+        "help",
+        "bye",
+        "exit",
+        "quit"
     ]
         command_completer = WordCompleter(commands)
 
         while True:
             choice = prompt("Введіть команду: ", completer=command_completer)
 
+            #КОМАНДИ АДРЕСНОЇ КНИГИ
+            #AAAAAAAAAAAAAAAAAAAAAA
             if choice == "add-contact":
                 self.add_contact()
             elif choice == "show-all":
                 self.show_contacts()
+            elif choice == "add-phone":
+                self.add_phone()
+            elif choice == "add-email":
+                self.add_email()
+            elif choice == "add-address":
+                self.add_address()
+            elif choice == "add-birthday":
+                self.add_birthday()
+            #КОМАНДИ НОТАТОК
+            #HHHHHHHHHHHHHHH
             elif choice == "add-note":
                 self.add_note()
             elif choice == "find-notes":
-                name = input("Введіть строку для пошуку нотатки: ")
+                notes_completer = WordCompleter(list(self.notebook.notes.keys()))
+                name = prompt("Введіть строку для пошуку нотатки: ", completer=notes_completer)
                 result = self.notebook.find_note(name)
                 print(result)
-            elif choice == "all-notes":
+            elif choice == "add-tag":
+                self.add_note()
+            elif choice == "find-tag":
+                self.add_note()
+            elif choice == "sort-tag":
+                self.add_note()
+            elif choice == "show-notes":
                 self.show_notes()
+            #СОРТУВАННЯ
             elif choice == "sort-folder":
                 name = input("Введіть повний шлях до папки: ")
                 #додати перевірку правильності шляху, path.exists щось таке. Можливо винести в окрему процедуру, як вище
                 fmanager = FileManager(name)
                 fmanager.sort_files()
-            elif choice == "bye":
+            elif choice in ["bye","exit","quit"]:
                 print("Дякую за використання! До побачення.")
                 break
             else:
                 print("Невірний вибір. Спробуйте ще раз.")
+                
         #dump address_book and notebook
         self.address_book.dump()
         self.notebook.dump()
@@ -86,25 +122,46 @@ class ConsoleInterface:
         self.address_book.add_record(contact)
         # self.save_data()
 
-    def is_not_empty(self, data):
-        # Перевірка, чи дані не є порожніми
-        return bool(data)
-
     def show_contacts(self):
         contacts = list(self.address_book.data.values())
         if contacts:
-            table = Table(show_header=True, header_style="bold magenta")
+            table = Table(show_header=True, header_style="bold red")
             table.add_column("Iм'я", style="dim", width=10) # ширину можете міняти, назви колонок також
             table.add_column("Телефони", width=25)
             table.add_column("Адреса", justify="left")
             
             for contact in contacts:
-                table.add_row(contact.name.value, *contact.phones, str(contact.adress))
+                table.add_row(contact.name.value, *contact.phones, contact.adress)
                 table.add_section()
                 # print(contact)
             console.print(table)
         else:
             print("Немає жодного контакту.")
+    
+    def add_phone(self):
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            phone_number = input("Введіть номер телефону: ")
+            contact.add_phone(phone_number)
+            print("Номер телефону успішно доданий.")
+        else:
+            print("Контакту не існує. Створіть його спочатку.")
+    
+    def add_email(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, ІМЕЙЛ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ІМЕЙЛ. ДОДАТИ ІМЕЙЛ КОНТАКТУ
+        pass
+    
+    def add_address(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, АДРЕСУ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ АДРЕСУ (ХЗ, ХОЧА Б НА ДОВЖИНУ СТРОКИ, МІНІМУМ 3 СИМВОЛИ). ДОДАТИ АДРЕСУ КОНТАКТУ
+        pass
+    
+    def add_birthday(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
+        pass
 
     def add_note(self):
         title = input("Введіть назву нотатки: ")
