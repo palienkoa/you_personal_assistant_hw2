@@ -1,4 +1,4 @@
-from modules.address_book import AddressBook, Record, Email, Phone
+from modules.address_book import AddressBook, Record
 from modules.notes import Notes, Note
 from modules.file_manager import FileManager 
 from prompt_toolkit import prompt
@@ -42,16 +42,15 @@ class ConsoleInterface:
         "del-email",
         "del-address",
         "del-birthday",
-        "next-birthdays"
+        "next-birthdays",
         #notes section, del comment later
         "add-note",
         "find-note",
         "del-note",
-        "all-notes",
+        "show-notes",
         "add-tag",
         "find-tag",
-        "sort-tag"
-        
+        "sort-tag",        
         #other, del later
         "sort-folder",
         "help",
@@ -88,12 +87,14 @@ class ConsoleInterface:
                 self.add_note()
             elif choice == "find-note":
                 self.find_note()
+            elif choice == "del-note":
+                self.del_note()
             elif choice == "add-tag":
-                self.add_note()
+                self.add_tag()
             elif choice == "find-tag":
-                self.add_note()
+                self.find_tag()
             elif choice == "sort-tag":
-                self.add_note()
+                self.sort_tag()
             elif choice == "show-notes":
                 self.show_notes()
             #СОРТУВАННЯ
@@ -115,31 +116,31 @@ class ConsoleInterface:
     def add_contact(self):
         while True:
             name = input("Введіть ім'я контакту: ")
-            if len(name.strip) < 3:
+            if len(name.strip()) < 3:
                 print('Ім\'я повинно складатися з більше ніж 2 символів')
             else:
                 break
+        contact = Record(name)
         while True:
-            address = input("Введіть адресу контакту: ")
-            if len(name.strip) < 3:
+            address = input("Введіть адресу контакту: ").strip()
+            if len(name.strip()) < 3:
                 print('Адреса повинна складатися з більше ніж 2 символів')
             else:
                 break
         while True:
-            phone = input("Введіть номер телефону контакту: ")
-            if not Phone.validate(phone):
+            phone = input("Введіть номер телефону контакту: ").strip()
+            if not contact.validate_phone(phone):
                 console.print("Неправильний формат.\nВведіть номер телефона без пробілів, символів, має бути 10 цифр, натисність Enter", style='bold red')
             else:
                 break
         while True:
-            email = input("Введіть email контакту: ")
-            if not Email.validate(email):
+            email = input("Введіть email контакту: ").strip()
+            if not contact.validate_email(email):
                 console.print("Введіть електронну адресу латинськими літерами у такому форматі: name@name.name, натисність Enter: ", style='bold red')
             else:
                 break
         # birthday = input("Введіть день народження контакту (рррр-мм-дд): ")
 
-        contact = Record(name)
         contact.add_adress(address)
         contact.add_phone(phone)
         contact.add_email(email)
@@ -166,10 +167,11 @@ class ConsoleInterface:
             table = Table(show_header=True, header_style="bold red")
             table.add_column("Iм'я", style="dim", width=10) # ширину можете міняти, назви колонок також
             table.add_column("Телефони", width=25)
+            table.add_column("Імейл", justify="left")
             table.add_column("Адреса", justify="left")
             
             for contact in contacts:
-                table.add_row(contact.name.value, *contact.phones, contact.adress)
+                table.add_row(contact.name.value, *contact.phones, *contact.emails, contact.adress)
                 table.add_section()
                 # print(contact)
             console.print(table)
@@ -249,7 +251,18 @@ class ConsoleInterface:
         notes_completer = WordCompleter(list(self.notebook.notes.keys()))
         name = prompt("Введіть строку для пошуку нотатки: ", completer=notes_completer)
         result = self.notebook.find_note(name)
-        print(result)
+        #прописування колонок
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("ЗАГОЛОВОК", style="dim", width=10) # ширину можете міняти, назви колонок також
+        table.add_column("НОТАТКА", width=25)
+        table.add_column("ТЕГИ", justify="left")
+        if not result:
+            print("Записи не знайдено")
+        else:
+            table.add_row(result.title, result.body, str(*result.tags))
+
+        console.print(table)    
+        # print(result)
     
     def del_note(self):
         #TODO
