@@ -26,6 +26,7 @@ class Note:
 class Notes:
     def __init__(self) -> None:
         self.file = "notes.data"
+        self.tags_file = "tags.data"
         self.notes = dict()
         self.tags_dictionary = dict()
 
@@ -64,7 +65,13 @@ class Notes:
     
     #method to find notes by tag
     def search_by_tag(self, tag:str):
-        return [self.notes[title] for title in self.tags_dictionary.get(tag, [])]
+        found_notes = []
+        if tag in self.tags_dictionary.keys():
+            for title in self.tags_dictionary.get(tag):
+                found_notes.append(self.notes.get(title))
+            return found_notes
+        else:
+            return []
 
     #виводить список всіх нотатків відсортований за кількістю тегів    
     def sort_by_tags(self):
@@ -101,6 +108,8 @@ class Notes:
     def dump(self):
         with open(self.file, 'wb') as file:
             pickle.dump(self.notes, file)
+        with open(self.tags_file, 'wb') as tags_file:
+            pickle.dump(self.tags_dictionary, tags_file)
             
     def load(self):
         p = Path(self.file)
@@ -111,3 +120,12 @@ class Notes:
                 self.notes = pickle.load(file)
             except EOFError:
                 pass #no data saved
+        p = Path(self.tags_file)
+        if not p.exists():
+            return
+        with open(self.tags_file, 'rb') as file:
+            try:
+                self.tags_dictionary = pickle.load(file)
+            except EOFError:
+                pass #no data saved   
+            

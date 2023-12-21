@@ -171,7 +171,7 @@ class ConsoleInterface:
             table.add_column("Адреса", justify="left")
             
             for contact in contacts:
-                table.add_row(contact.name.value, *contact.phones, *contact.emails, contact.adress)
+                table.add_row(contact.name.value, ",".join(contact.phones), ",".join(contact.emails), contact.adress)
                 table.add_section()
                 # print(contact)
             console.print(table)
@@ -269,8 +269,9 @@ class ConsoleInterface:
         # print(result)
     
     def del_note(self):
-        #TODO
-        pass
+        notes_completer = WordCompleter(list(self.notebook.notes.keys()))
+        name = prompt("Введіть назву нотатки для видалення: ", completer=notes_completer)
+        self.notebook.delete_note(name)
 
     def show_notes(self):
 
@@ -294,7 +295,7 @@ class ConsoleInterface:
         name = prompt("Введіть імя нотатки: ", completer=notes_completer).strip()
         result = self.notebook.find_note(name)
         if result:
-            tags_completer = WordCompleter(list(self.notebook.notes.keys()))
+            tags_completer = WordCompleter(list(self.notebook.tags_dictionary.keys()))
             tag = prompt("Введіть тег: ", completer=tags_completer).strip()
             self.notebook.add_tag(name, tag)
     
@@ -319,16 +320,26 @@ class ConsoleInterface:
         
     
     def sort_tag(self):
-        #TODO
-        pass
-    
+        result = self.notebook.sort_by_tags()
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("ЗАГОЛОВОК", style="dim", width=10) # ширину можете міняти, назви колонок також
+        table.add_column("НОТАТКА", width=25)
+        table.add_column("ТЕГИ", justify="left")
+        
+        for note in result:
+            table.add_row(note.title, note.body, ",".join(list(note.tags)))
+            table.add_section()
+
+        console.print(table)
+        
     def del_tag(self):
-        #TODO
-        pass
+        tags_completer = WordCompleter(list(self.notebook.tags_dictionary.keys()))
+        tag = prompt("Введіть тег: ", completer=tags_completer).strip()
+        # self.notebook.delete_tag(tag)
+        print(f"Тег {tag} видалено")#не готово
     
     def show_all_tags(self):
-        #TODO
-        pass
+        print(self.notebook.get_all_tags())
 
 if __name__ == "__main__":
     console_interface = ConsoleInterface()
