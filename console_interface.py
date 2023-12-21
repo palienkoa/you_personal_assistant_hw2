@@ -233,8 +233,12 @@ class ConsoleInterface:
         #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
         pass 
     
-    def show_next_birthdays():
+    def show_next_birthdays(self):
         #TODO
+        dniv = input("Введіть кількість днів: ")
+        for record in self.address_book.values():
+            if record.days_to_birthday() < dniv:
+                print(record)
         pass   
 
         #МЕТОДИ НОТАТОК
@@ -259,7 +263,7 @@ class ConsoleInterface:
         if not result:
             print("Записи не знайдено")
         else:
-            table.add_row(result.title, result.body, str(*result.tags))
+            table.add_row(result.title, result.body, ",".join(list(result.tags)))
 
         console.print(table)    
         # print(result)
@@ -280,7 +284,7 @@ class ConsoleInterface:
             table.add_column("ТЕГИ", justify="left")
 
             for note in self.notebook.notes.values():
-                table.add_row(note.title, note.body, ",".join(*note.tags))
+                table.add_row(note.title, note.body, ",".join(list(note.tags)))
                 table.add_section()
 
             console.print(table)
@@ -290,12 +294,29 @@ class ConsoleInterface:
         name = prompt("Введіть імя нотатки: ", completer=notes_completer).strip()
         result = self.notebook.find_note(name)
         if result:
-            tag = input("Введіть тег: ")
+            tags_completer = WordCompleter(list(self.notebook.notes.keys()))
+            tag = prompt("Введіть тег: ", completer=tags_completer).strip()
             self.notebook.add_tag(name, tag)
     
     def find_tag(self):
-        #TODO
-        pass
+        tags_completer = WordCompleter(list(self.notebook.tags_dictionary.keys()))
+        tag = prompt("Введіть тег: ", completer=tags_completer).strip()
+        result = self.notebook.search_by_tag(tag)
+        if not len(result):
+            print('Такого тегу в базі даних немає')
+            return
+        #прописування колонок
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("ЗАГОЛОВОК", style="dim", width=10) # ширину можете міняти, назви колонок також
+        table.add_column("НОТАТКА", width=25)
+        table.add_column("ТЕГИ", justify="left")
+        
+        for note in result:
+            table.add_row(note.title, note.body, ",".join(list(note.tags)))
+            table.add_section()
+
+        console.print(table)
+        
     
     def sort_tag(self):
         #TODO

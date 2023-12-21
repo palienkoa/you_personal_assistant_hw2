@@ -26,8 +26,9 @@ class Field:
         return str(self.__value)
        
 class Name(Field):
-    # реалізація клас
-    pass
+    
+    def __str__(self) -> str:
+        return super().__str__()
 
 class Phone(Field):
     # реалізація класу
@@ -39,16 +40,14 @@ class Phone(Field):
         super().__init__(value)            
          
     def validate(self, phone):
-          
-        while True:            
-            self.phone = phone            
+        while True:
+            self.phone = phone
             long_ = len(self.phone)
-            symb = str(self.phone).isnumeric()            
-            if long_ == 10 and symb == True:                
-                return self.phone
+            symb = str(self.phone).isnumeric()
+            if long_ == 10 and symb == True:
+                return True
             else:
-                print("Введіть номер телефона без пробілів, символів, має бути 10 цифр, натисність Enter: ")
-                phone = input()                                            
+                return False                                           
                 
 class Birthday(Field):
 #     # реалізація класу
@@ -73,22 +72,21 @@ class Email(Field):
         self.email = self.value
         return self.email       
         
-    def validate(self, email):    
-        while True:            
+    def validate(self, email):
+        while True:
             self.email = email
             name_split = self.email.split('@')
             for n_sp in name_split:
                 pass
-            len_mail = len(self.email)            
+            len_mail = len(self.email)
             rah_1 = self.email.count('@')
             rah_2 = self.email.count(' ')
             rah_3 = n_sp.count('.')
-            rah_4 = self.email.count(',')            
+            rah_4 = self.email.count(',')
             if len_mail > 4 and rah_2 == 0 and rah_1 == 1 and rah_3 > 0 and rah_4 == 0:
-                return self.email
+                return True
             else:
-                console.print("Введіть електронну адресу латинськими літерами у такому форматі: name@name.name, натисність Enter: ", style='bold red')
-                email = input()
+                return False
 
 class Adress(Field):
      # реалізація класу
@@ -106,6 +104,32 @@ class Record:
         self.phones = []
         self.emails = []
         self.adress = ' '
+        
+    def validate_email(self, email):
+        while True:
+            self.email = email
+            name_split = self.email.split('@')
+            for n_sp in name_split:
+                pass
+            len_mail = len(self.email)
+            rah_1 = self.email.count('@')
+            rah_2 = self.email.count(' ')
+            rah_3 = n_sp.count('.')
+            rah_4 = self.email.count(',')
+            if len_mail > 4 and rah_2 == 0 and rah_1 == 1 and rah_3 > 0 and rah_4 == 0:
+                return True
+            else:
+                return False
+            
+    def validate_phone(self, phone):
+        while True:
+            self.phone = phone
+            long_ = len(self.phone)
+            symb = str(self.phone).isnumeric()
+            if long_ == 10 and symb == True:
+                return True
+            else:
+                return False 
                 
     # реалізація класу
         
@@ -117,18 +141,18 @@ class Record:
         # phones_ = self.phones        
         # return phones_
     
-    def days_to_birthday(self, birth_yer, birth_mont, birth_day):
+    def days_to_birthday(self):
         txt_valid = ' '
         day_now = date.today() 
         rik = day_now.year
-        self.birth_yer = birth_yer        
-        self.birth_mont = birth_mont        
-        self.birth_day = birth_day
+        # self.birth_yer = birth_yer        
+        # self.birth_mont = birth_mont        
+        # self.birth_day = birth_day
         print('')
         console.print('У В А Г А !!!', style='bold red')
         print('')        
         try:
-            birth = date(rik, self.birth_mont, self.birth_day)        
+            birth = date(self.birth_day)        
             dniv = int((birth - day_now).days)
             if dniv == 0:
                 console.print(f'Сьогодні день народження у [yellow]{self.name}[/yellow]', style='bold blue')
