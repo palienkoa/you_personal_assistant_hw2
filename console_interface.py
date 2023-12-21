@@ -51,7 +51,6 @@ class ConsoleInterface:
         "add-tag",
         "find-tag",
         "sort-tag",        
-        #other, del later
         "sort-folder",
         "help",
         "bye",
