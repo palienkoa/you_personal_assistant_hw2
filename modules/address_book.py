@@ -38,8 +38,7 @@ class Phone(Field):
         self.validate(value)
         super().__init__(value)            
          
-    def validate(self, phone):
-          
+    def validate(self, phone):  
         while True:            
             self.phone = phone            
             long_ = len(self.phone)
@@ -107,8 +106,32 @@ class Record:
         self.emails = []
         self.adress = ' '
                 
-    # реалізація класу
-        
+    def validate_phone(self, phone):
+        self.phone = phone
+        long_ = len(self.phone)
+        symb = str(self.phone).isnumeric()
+        if long_ == 10 and symb == True:
+            return True
+        else:
+            return False 
+
+    def validate_email(self, email):         
+            self.email = email
+            name_split = self.email.split('@')
+            for n_sp in name_split:
+                pass
+            len_mail = len(self.email)
+            rah_1 = self.email.count('@')
+            rah_2 = self.email.count(' ')
+            rah_3 = n_sp.count('.')
+            rah_4 = self.email.count(',')
+            if len_mail > 4 and rah_2 == 0 and rah_1 == 1 and rah_3 > 0 and rah_4 == 0:
+                return True
+            else:
+                return False
+
+
+
     def add_phone(self, phone):                
         
         # self.phone = phone                 
@@ -143,19 +166,12 @@ class Record:
             birth = []          
         return birth                
     
-    def add_email(self, email):                
-        
-        # self.email = email                 
+    def add_email(self, email):                                
         Email.validate(self, email)
-        self.emails.append(email)     
-        # emails_ = self.emails        
-        # return emails_
+        self.emails.append(email)
     
     def add_adress(self, adress):                
-        
-        self.adress = adress             
-        # adress_ = self.adress        
-        # return adress_ 
+        self.adress = adress              
         
     def remove_phone(self, phone):
         try:
@@ -187,7 +203,7 @@ class AddressBook(UserDict):
             
     def find(self, name):
         if name in self.data:
-            return name       
+            return self.data.get(name)     
         
     def find_phone(self, ph_):        
         for dict_ in self.data.items():            
