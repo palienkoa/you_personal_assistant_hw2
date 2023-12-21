@@ -1,4 +1,4 @@
-from modules.address_book import AddressBook, Record
+from modules.address_book import AddressBook, Record, Email, Phone
 from modules.notes import Notes, Note
 from modules.file_manager import FileManager 
 from prompt_toolkit import prompt
@@ -28,17 +28,30 @@ class ConsoleInterface:
     def run(self):
         commands = [
         "add-contact",
+        "find-contact",
         "edit-contact",
         "del-contact",
         "show-all",
         "add-phone",
         "add-email",
         "add-address",
+        "add-birthday",
+        "edit-phone",
+        "edit-email",
+        "del-phone",
+        "del-email",
+        "del-address",
+        "del-birthday",
+        "next-birthdays"
         #notes section, del comment later
         "add-note",
+        "find-note",
+        "del-note",
         "all-notes",
         "add-tag",
-        "find-notes",
+        "find-tag",
+        "sort-tag"
+        
         #other, del later
         "sort-folder",
         "help",
@@ -55,6 +68,10 @@ class ConsoleInterface:
             #AAAAAAAAAAAAAAAAAAAAAA
             if choice == "add-contact":
                 self.add_contact()
+            elif choice == "edit-contact":
+                self.add_phone()
+            elif choice == "del-contact":
+                self.add_phone()
             elif choice == "show-all":
                 self.show_contacts()
             elif choice == "add-phone":
@@ -69,11 +86,8 @@ class ConsoleInterface:
             #HHHHHHHHHHHHHHH
             elif choice == "add-note":
                 self.add_note()
-            elif choice == "find-notes":
-                notes_completer = WordCompleter(list(self.notebook.notes.keys()))
-                name = prompt("Введіть строку для пошуку нотатки: ", completer=notes_completer)
-                result = self.notebook.find_note(name)
-                print(result)
+            elif choice == "find-note":
+                self.find_note()
             elif choice == "add-tag":
                 self.add_note()
             elif choice == "find-tag":
@@ -101,26 +115,50 @@ class ConsoleInterface:
     def add_contact(self):
         while True:
             name = input("Введіть ім'я контакту: ")
-            address = input("Введіть адресу контакту: ")
-            phone = input("Введіть номер телефону контакту: ")
-            email = input("Введіть email контакту: ")
-            birthday = input("Введіть день народження контакту (рррр-мм-дд): ")
-
-            if all(self.is_not_empty(data) for data in [name, address, phone, email, birthday]):
-                # if all(self.is_valid_input(data) for data in [name, address, phone, email, birthday]):
-                break
-            # else:
-            #     print("Некоректно введені дані. Будь ласка, перевірте правильність вводу.")
+            if len(name.strip) < 3:
+                print('Ім\'я повинно складатися з більше ніж 2 символів')
             else:
-                print("Поле пусте, введіть дані.")
+                break
+        while True:
+            address = input("Введіть адресу контакту: ")
+            if len(name.strip) < 3:
+                print('Адреса повинна складатися з більше ніж 2 символів')
+            else:
+                break
+        while True:
+            phone = input("Введіть номер телефону контакту: ")
+            if not Phone.validate(phone):
+                console.print("Неправильний формат.\nВведіть номер телефона без пробілів, символів, має бути 10 цифр, натисність Enter", style='bold red')
+            else:
+                break
+        while True:
+            email = input("Введіть email контакту: ")
+            if not Email.validate(email):
+                console.print("Введіть електронну адресу латинськими літерами у такому форматі: name@name.name, натисність Enter: ", style='bold red')
+            else:
+                break
+        # birthday = input("Введіть день народження контакту (рррр-мм-дд): ")
 
         contact = Record(name)
         contact.add_adress(address)
         contact.add_phone(phone)
         contact.add_email(email)
+        # contact.set_birthday()
         
         self.address_book.add_record(contact)
         # self.save_data()
+    
+    def find_contact(self):
+        #TODO
+        pass
+    
+    def edit_contact(self):
+        #TODO
+        pass
+    
+    def del_contact(self):
+        #TODO
+        pass
 
     def show_contacts(self):
         contacts = list(self.address_book.data.values())
@@ -162,7 +200,43 @@ class ConsoleInterface:
         #TODO
         #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
         pass
+    
+    def edit_phone(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, ТЕЛЕФОН, НОВИЙ ТЕЛЕФОН. ЗНАЙТИ КОНТАКТ. ЗНАЙТИ ТЕЛЕФОН. ВАЛІДУВАТИ НОВИЙ ТЕЛЕФОН. ЗМІНИТИ ТЕЛЕФОН КОНТАКТУ
+        pass
+    
+    def edit_email(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, ІМЕЙЛ, НОВИЙ ІМЕЙЛ. ЗНАЙТИ КОНТАКТ. ЗНАЙТИ ІМЕЙЛ. ВАЛІДУВАТИ НОВИЙ ІМЕЙЛ. ЗМІНИТИ ІМЕЙЛ КОНТАКТУ
+        pass
+    
+    def del_phone(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, ТЕЛЕФОН, НОВИЙ ТЕЛЕФОН. ЗНАЙТИ КОНТАКТ. ЗНАЙТИ ТЕЛЕФОН. ВАЛІДУВАТИ НОВИЙ ТЕЛЕФОН. ЗМІНИТИ ТЕЛЕФОН КОНТАКТУ
+        pass
+    
+    def del_email(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, ІМЕЙЛ, НОВИЙ ІМЕЙЛ. ЗНАЙТИ КОНТАКТ. ЗНАЙТИ ІМЕЙЛ. ВАЛІДУВАТИ НОВИЙ ІМЕЙЛ. ЗМІНИТИ ІМЕЙЛ КОНТАКТУ
+        pass
+    
+    def del_address(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, АДРЕСУ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ АДРЕСУ (ХЗ, ХОЧА Б НА ДОВЖИНУ СТРОКИ, МІНІМУМ 3 СИМВОЛИ). ДОДАТИ АДРЕСУ КОНТАКТУ
+        pass
+    
+    def del_birthday(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
+        pass 
+    
+    def show_next_birthdays():
+        #TODO
+        pass   
 
+        #МЕТОДИ НОТАТОК
+        #ННННННННННННННННННННННННННННННННННН
     def add_note(self):
         title = input("Введіть назву нотатки: ")
         content = input("Введіть текст нотатки: ")
@@ -170,6 +244,16 @@ class ConsoleInterface:
         new_note = Note(title, content)
         self.notebook.add_note(new_note)
         print("Нотатка успішно додана.")
+    
+    def find_note(self):
+        notes_completer = WordCompleter(list(self.notebook.notes.keys()))
+        name = prompt("Введіть строку для пошуку нотатки: ", completer=notes_completer)
+        result = self.notebook.find_note(name)
+        print(result)
+    
+    def del_note(self):
+        #TODO
+        pass
 
     def show_notes(self):
 
@@ -187,6 +271,26 @@ class ConsoleInterface:
                 table.add_section()
 
             console.print(table)
+            
+    def add_tag(self):
+        #TODO
+        pass
+    
+    def find_tag(self):
+        #TODO
+        pass
+    
+    def sort_tag(self):
+        #TODO
+        pass
+    
+    def del_tag(self):
+        #TODO
+        pass
+    
+    def show_all_tags(self):
+        #TODO
+        pass
 
 if __name__ == "__main__":
     console_interface = ConsoleInterface()
