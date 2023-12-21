@@ -51,7 +51,6 @@ class ConsoleInterface:
         "add-tag",
         "find-tag",
         "sort-tag",        
-        #other, del later
         "sort-folder",
         "help",
         "bye",
@@ -130,7 +129,7 @@ class ConsoleInterface:
         while True:
             phone = input("Введіть номер телефону контакту: ").strip()
             if not contact.validate_phone(phone):
-                console.print("Неправильний формат.\nВведіть номер телефона без пробілів, символів, має бути 10 цифр, натисність Enter", style='bold red')
+                console.print("Введіть номер телефона без пробілів, символів, має бути 10 цифр", style='bold red')
             else:
                 break
         while True:
@@ -178,30 +177,36 @@ class ConsoleInterface:
         else:
             print("Немає жодного контакту.")
     
-    def add_phone(self):
-        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
-        contact = self.address_book.find(contact_name)
-        if contact:
-            phone_number = input("Введіть номер телефону: ")
-            contact.add_phone(phone_number)
-            print("Номер телефону успішно доданий.")
-        else:
-            print("Контакту не існує. Створіть його спочатку.")
+    # def add_phone(self):
+    #     while True:
+    #         contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+    #         contact = self.address_book.find(contact_name)
+    #         if contact:
+    #             phone = input("Введіть номер телефону: ")
+    #             if contact.validate_phone(phone):
+    #                 contact.add_phone(phone)
+    #                 print("Номер телефону успішно доданий.")
+    #                 break
+    #             else:
+    #                 print("Не коректні ввелення, спробуйте ще раз") 
+    #         else:
+    #             print("Ім'я контакту не знайдено")
     
-    def add_email(self):
-        #TODO
-        #ЗАПИТАТИ ІМ"Я, ІМЕЙЛ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ІМЕЙЛ. ДОДАТИ ІМЕЙЛ КОНТАКТУ
-        pass
+    # def add_email(self):
+    #     while True:
+    #         contact_name = input("Введіть ім'я контакту: ")#.capitalize()
+    #         contact = self.address_book.find(contact_name)
+    #         if contact:
+    #             email = input("Додайте електронну адресу: ")
+    #             if contact.validate_email(email):
+    #                 contact.add_email(email)
+    #                 print("Електронну адресу успішно додано")
+    #                 break
+    #             else:
+    #                 print("Не коректні ввелення, спробуйте ще раз")
+    #         else:
+    #             print("Ім'я контакту не знайдено")
     
-    def add_address(self):
-        #TODO
-        #ЗАПИТАТИ ІМ"Я, АДРЕСУ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ АДРЕСУ (ХЗ, ХОЧА Б НА ДОВЖИНУ СТРОКИ, МІНІМУМ 3 СИМВОЛИ). ДОДАТИ АДРЕСУ КОНТАКТУ
-        pass
-    
-    def add_birthday(self):
-        #TODO
-        #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
-        pass
     
     def edit_phone(self):
         #TODO
