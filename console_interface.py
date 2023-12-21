@@ -50,7 +50,8 @@ class ConsoleInterface:
         "show-notes",
         "add-tag",
         "find-tag",
-        "sort-tag",        
+        "sort-tag",
+        "show-all-tags",       
         #other, del later
         "sort-folder",
         "help",
@@ -68,7 +69,9 @@ class ConsoleInterface:
             if choice == "add-contact":
                 self.add_contact()
             elif choice == "edit-contact":
-                self.add_phone()
+                self.edit_contact()
+            elif choice == "find-contact":
+                self.find_contact()
             elif choice == "del-contact":
                 self.add_phone()
             elif choice == "show-all":
@@ -81,6 +84,18 @@ class ConsoleInterface:
                 self.add_address()
             elif choice == "add-birthday":
                 self.add_birthday()
+            elif choice == "edit-phone":
+                self.edit_phone()
+            elif choice == "edit-email":
+                self.edit_email()
+            elif choice == "del-phone":
+                self.del_phone()
+            elif choice == "del-email":
+                self.del_email()
+            elif choice == "del-address":
+                self.del_address()
+            elif choice == "del-birthday":
+                self.del_birthday()
             #КОМАНДИ НОТАТОК
             #HHHHHHHHHHHHHHH
             elif choice == "add-note":
@@ -97,6 +112,8 @@ class ConsoleInterface:
                 self.sort_tag()
             elif choice == "show-notes":
                 self.show_notes()
+            elif choice == "show-all-tags":
+                self.show_all_tags()
             #СОРТУВАННЯ
             elif choice == "sort-folder":
                 name = input("Введіть повний шлях до папки: ")
