@@ -280,14 +280,18 @@ class ConsoleInterface:
             table.add_column("ТЕГИ", justify="left")
 
             for note in self.notebook.notes.values():
-                table.add_row(note.title, note.body, str(note.tags))
+                table.add_row(note.title, note.body, ",".join(*note.tags))
                 table.add_section()
 
             console.print(table)
             
     def add_tag(self):
-        #TODO
-        pass
+        notes_completer = WordCompleter(list(self.notebook.notes.keys()))
+        name = prompt("Введіть імя нотатки: ", completer=notes_completer).strip()
+        result = self.notebook.find_note(name)
+        if result:
+            tag = input("Введіть тег: ")
+            self.notebook.add_tag(name, tag)
     
     def find_tag(self):
         #TODO
