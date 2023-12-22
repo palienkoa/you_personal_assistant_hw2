@@ -38,7 +38,11 @@ class Notes:
     
     #знаходить нотатку за заданою строкою, якщо знайшли повертає об"єкт нотатки, якщо ні - None
     def find_note(self, search_text:str):
-        return next((note for note in self.notes.values() if note.search(search_text)), None)
+        found_notes = []
+        for note in self.notes.values():
+            if note.search(search_text):
+                found_notes.append(note)
+        return found_notes
 
     #службовий метод, при додаванні тега у нотатку також оновлює словник тегів/нотатків нотатника        
     def _add_to_tags_dictionary(self, tag:str, title:str):
