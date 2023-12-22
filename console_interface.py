@@ -96,6 +96,8 @@ class ConsoleInterface:
                 self.del_address()
             elif choice == "del-birthday":
                 self.del_birthday()
+            elif choice == "next-birthdays":
+                self.show_next_birthdays()
             #КОМАНДИ НОТАТОК
             #HHHHHHHHHHHHHHH
             elif choice == "add-note":
@@ -147,7 +149,7 @@ class ConsoleInterface:
         while True:
             phone = input("Введіть номер телефону контакту: ").strip()
             if not contact.validate_phone(phone):
-                console.print("Введіть номер телефона без пробілів, символів, має бути 10 цифр", style='bold red')
+                console.print("Неправильний формат.\nВведіть номер телефона без пробілів, символів, має бути 10 цифр, натисність Enter", style='bold red')
             else:
                 break
         while True:
@@ -156,20 +158,39 @@ class ConsoleInterface:
                 console.print("Введіть електронну адресу латинськими літерами у такому форматі: name@name.name, натисність Enter: ", style='bold red')
             else:
                 break
-        # birthday = input("Введіть день народження контакту (рррр-мм-дд): ")
+        birthday = input("Введіть день народження контакту (рррр-мм-дд): ")
+        note = input("Введіть примітку для контакту: ")
 
         contact.add_adress(address)
         contact.add_phone(phone)
         contact.add_email(email)
-        # contact.set_birthday()
+        contact.add_birthday(birthday)
+        contact.add_note(note)
         
         self.address_book.add_record(contact)
         # self.save_data()
     
     def find_contact(self):
-        #TODO
-        pass
-    
+        records_completer = WordCompleter(list(self.address_book.data.keys()))
+        name = prompt("Введіть строку для пошуку контакту: ", completer=records_completer)
+        contacts = self.address_book.find(name)
+        if contacts:
+            table = Table(show_header=True, header_style="bold red")
+            table.add_column("Iм'я", style="dim", width=10) # ширину можете міняти, назви колонок також
+            table.add_column("Телефони", width=25)
+            table.add_column("Імейли", justify="left")
+            table.add_column("Адреса", justify="left")
+            table.add_column("День народження", justify="left")
+            table.add_column("Примітка", justify="left")
+            
+            for contact in contacts:
+                table.add_row(contact.name.value, ",".join(contact.phones), ",".join(contact.emails), contact.adress, contact.birthday, contact.note)
+                table.add_section()
+                # print(contact)
+            console.print(table)
+        else:
+            print("Нічого не знайдено.")
+            
     def edit_contact(self):
         #TODO
         pass
@@ -184,47 +205,58 @@ class ConsoleInterface:
             table = Table(show_header=True, header_style="bold red")
             table.add_column("Iм'я", style="dim", width=10) # ширину можете міняти, назви колонок також
             table.add_column("Телефони", width=25)
-            table.add_column("Імейл", justify="left")
+            table.add_column("Імейли", justify="left")
             table.add_column("Адреса", justify="left")
+            table.add_column("День народження", justify="left")
+            table.add_column("Примітка", justify="left")
             
             for contact in contacts:
-                table.add_row(contact.name.value, ",".join(contact.phones), ",".join(contact.emails), contact.adress)
+                table.add_row(contact.name.value, ",".join(contact.phones), ",".join(contact.emails), contact.adress, contact.birthday, contact.note)
                 table.add_section()
                 # print(contact)
             console.print(table)
         else:
             print("Немає жодного контакту.")
     
-    # def add_phone(self):
-    #     while True:
-    #         contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
-    #         contact = self.address_book.find(contact_name)
-    #         if contact:
-    #             phone = input("Введіть номер телефону: ")
-    #             if contact.validate_phone(phone):
-    #                 contact.add_phone(phone)
-    #                 print("Номер телефону успішно доданий.")
-    #                 break
-    #             else:
-    #                 print("Не коректні ввелення, спробуйте ще раз") 
-    #         else:
-    #             print("Ім'я контакту не знайдено")
+    def add_phone(self):
+        while True:
+            contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+            contact = self.address_book.find(contact_name)
+            if contact:
+                phone = input("Введіть номер телефону: ")
+                if contact.validate_phone(phone):
+                    contact.add_phone(phone)
+                    print("Номер телефону успішно доданий.")
+                    break
+                else:
+                    print("Не коректні ввелення, спробуйте ще раз") 
+            else:
+                print("Ім'я контакту не знайдено")
     
-    # def add_email(self):
-    #     while True:
-    #         contact_name = input("Введіть ім'я контакту: ")#.capitalize()
-    #         contact = self.address_book.find(contact_name)
-    #         if contact:
-    #             email = input("Додайте електронну адресу: ")
-    #             if contact.validate_email(email):
-    #                 contact.add_email(email)
-    #                 print("Електронну адресу успішно додано")
-    #                 break
-    #             else:
-    #                 print("Не коректні ввелення, спробуйте ще раз")
-    #         else:
-    #             print("Ім'я контакту не знайдено")
+    def add_email(self):
+        while True:
+            contact_name = input("Введіть ім'я контакту: ")#.capitalize()
+            contact = self.address_book.find(contact_name)
+            if contact:
+                email = input("Додайте електронну адресу: ")
+                if contact.validate_email(email):
+                    contact.add_email(email)
+                    print("Електронну адресу успішно додано")
+                    break
+                else:
+                    print("Не коректні ввелення, спробуйте ще раз")
+            else:
+                print("Ім'я контакту не знайдено")
     
+    def add_address(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, АДРЕСУ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ АДРЕСУ (ХЗ, ХОЧА Б НА ДОВЖИНУ СТРОКИ, МІНІМУМ 3 СИМВОЛИ). ДОДАТИ АДРЕСУ КОНТАКТУ
+        pass
+    
+    def add_birthday(self):
+        #TODO
+        #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
+        pass
     
     def edit_phone(self):
         #TODO
@@ -257,12 +289,24 @@ class ConsoleInterface:
         pass 
     
     def show_next_birthdays(self):
-        #TODO
-        dniv = input("Введіть кількість днів: ")
-        for record in self.address_book.values():
-            if record.days_to_birthday() < dniv:
-                print(record)
-        pass   
+        # file_name = 'data.json'
+        # with open(file_name, "r", encoding='utf-8') as fh:
+        #     unpacked = json.load(fh)
+        dniv_ = input("Введіть кількість днів: ")
+        # day_now = date.today()
+        # rik = day_now.year
+        # db = "_день народження"
+        # for key_birth, val_birth in unpacked.items():
+        #     if db in key_birth:
+        #         ind = key_birth.index(db)
+        #         name_birth = key_birth[0:ind]
+        #         misiac = int(val_birth[5:7])
+        #         den = int(val_birth[8:10])
+        #         data_birth_1 = date(rik, misiac, den)
+        #         dniv = int((data_birth_1 - day_now).days)
+        #         if dniv <= int(dniv_) and dniv > 0:
+        #             console.print(f'До дня народження [red]{name_birth}[/red] залишилося днів - {dniv}', style='bold green') 
+        console.print(f'В настіпні [red]{dniv_}[/red] днів, немає днів народжень', style='bold green')   
 
         #МЕТОДИ НОТАТОК
         #ННННННННННННННННННННННННННННННННННН
@@ -286,7 +330,9 @@ class ConsoleInterface:
         if not result:
             print("Записи не знайдено")
         else:
-            table.add_row(result.title, result.body, ",".join(list(result.tags)))
+            for note in result:
+                table.add_row(note.title, note.body, ",".join(list(note.tags)))
+                table.add_section()
 
         console.print(table)    
         # print(result)

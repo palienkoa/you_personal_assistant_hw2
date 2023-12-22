@@ -104,32 +104,11 @@ class Record:
         self.phones = []
         self.emails = []
         self.adress = ' '
+        self.birthday = ""
+        self.note = ""
         
-    def validate_email(self, email):
-        while True:
-            self.email = email
-            name_split = self.email.split('@')
-            for n_sp in name_split:
-                pass
-            len_mail = len(self.email)
-            rah_1 = self.email.count('@')
-            rah_2 = self.email.count(' ')
-            rah_3 = n_sp.count('.')
-            rah_4 = self.email.count(',')
-            if len_mail > 4 and rah_2 == 0 and rah_1 == 1 and rah_3 > 0 and rah_4 == 0:
-                return True
-            else:
-                return False
-            
-    def validate_phone(self, phone):
-        while True:
-            self.phone = phone
-            long_ = len(self.phone)
-            symb = str(self.phone).isnumeric()
-            if long_ == 10 and symb == True:
-                return True
-            else:
-                return False 
+    def search(self, search_text: str) -> bool:
+        return search_text in self.name.value or search_text in self.adress or search_text in self.note
                 
     def validate_phone(self, phone):
         self.phone = phone
@@ -158,12 +137,10 @@ class Record:
 
 
     def add_phone(self, phone):                
-        
         # self.phone = phone                 
         Phone.validate(self, phone)        
         self.phones.append(phone)              
-        # phones_ = self.phones        
-        # return phones_
+
     
     def days_to_birthday(self):
         txt_valid = ' '
@@ -196,7 +173,13 @@ class Record:
         self.emails.append(email)
     
     def add_adress(self, adress):                
-        self.adress = adress              
+        self.adress = adress
+    
+    def add_birthday(self, birthday):                
+        self.birthday = birthday 
+    
+    def add_note(self, note):                
+        self.note = note              
         
     def remove_phone(self, phone):
         try:
@@ -225,10 +208,12 @@ class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record 
                         
-            
-    def find(self, name):
-        if name in self.data:
-            return self.data.get(name)     
+    def find(self, search_text):
+        found_records = []
+        for record in self.data.values():
+            if record.search(search_text):
+                found_records.append(record)
+        return found_records     
         
     def find_phone(self, ph_):        
         for dict_ in self.data.items():            
@@ -244,18 +229,11 @@ class AddressBook(UserDict):
     def delete(self, rec):        
         try:
             self.data.pop(rec)
-            # self.data.pop(rec+'_день народження')
-            # self.data.pop(rec+'_Email')
-            # self.data.pop(rec+'_Адреса')
         except KeyError:
             print("Немає такого імені")
             return        
         a_ = f'[red]DELETED RECORD[/red] {rec}'
-        console.print(a_)
-        
-        # file_name = 'data.json'        
-        # with open(file_name, "w", encoding='utf-8') as fh:
-        #     pickle.dump(self.data, fh, ensure_ascii=False)          
+        console.print(a_)        
     
     def dump(self):
         with open(self.file, 'wb') as file:
@@ -267,401 +245,7 @@ class AddressBook(UserDict):
             return
         with open(self.file, 'rb') as file:
             try:
-                unpacked = pickle.loads(file.read())
+                unpacked = pickle.load(file)
                 self.data = unpacked
             except EOFError:
                 pass #no data saved           
-    
-        
-# # О С Н О В Н И Й  Б Л О К  К О Д У    
-       
-# data = {}
-# phones = []
-# phones_ = []
-# phone = ''
-# birth = []
-# email = ''
-# emails = []
-# emails_ = []
-# adress_ = ' '
-# adress = ' '
-# name_new = ''
-# flag_new = 0
-
-# Запуск коду. Привітання, знаходиться у файлі README.md, який має бути у папці коду
-# lich = 0
-# while lich < 20:
-#     lich += 1
-#     print('')
-# with open("read.md") as readme:
-#     markdown = Markdown(readme.read())
-# console.print(markdown, style='bold red')
-# lich = 0
-# while lich < 10:
-#     lich += 1
-#     print('')
-
-# book = AddressBook(data, phones)
-
-#    # Виведення всіх записів з книги за пошуковим словом або всіх записів через Enter
-# print('Перегляд усіх записів за пошуковим словом')
-# nme = input()
-# for name, record in book.data.items():
-#     if nme in name or nme in record:
-#         console.print('ЗНАЙДЕНО ЗАПИС: ', style='bold yellow')
-#         print(name, record)
-
-# # ПЕРЕГЛЯД УСІХ ДНІВ НАРОДЖЕННЯ з вказівкою на кількість днів до святкування
-# print('')
-# console.print('У В А Г А !!!', style='bold red')
-# day_now = date.today()
-# rik = day_now.year
-# db = "_день народження"
-
-# file_name = 'data.json'
-# with open(file_name, "r", encoding='utf-8') as fh:        
-#     unpacked = json.load(fh)    
-
-# for key_birth, val_birth in unpacked.items():   
-#     if db in key_birth:
-#         ind = key_birth.index(db)
-#         name_birth = key_birth[0:ind]
-#         misiac = int(val_birth[5:7])
-#         den = int(val_birth[8:10])        
-#         data_birth_1 = date(rik, misiac, den)        
-#         dniv = int((data_birth_1 - day_now).days)
-#         if dniv == 0:
-#             console.print(f'Сьогодні день народження у [yellow]{name_birth}[/yellow]', style='bold blue')
-#         if dniv < 0:    
-#             console.print(f'У цьому році день народження у {name_birth} вже минув', style='reverse red')     
-#         if dniv > 0:
-#             console.print(f'До дня народження [red]{name_birth}[/red] залишилося днів - {dniv}', style='bold green')
-     
-# # РОБОТА з КНИГОЮ КОНТАКТІВ
-# while True:    
-#     flag_new = 1
-#     print(' ')
-#     print('Заповнити книгу контактів? - Enter\nВивести повний запис за іменем? - f + Enter\nПереглянути книгу? - r + Enter\nВидалити запис? - d + Enter\nРедагувати запис? - ed + Enter\nВийти? - q + Enter')
-#     inp = input()
-#     if inp == 'q' or inp == 'й':        
-#         os.abort()
- 
-#  # ВІДКРИТТЯ ПОВНОГО ЗАПИСУ ЗА ІМЕНЕМ       
-#     if inp == 'f' or inp == 'а':
-#         telef = ''
-#         maill = ''
-#         dat_birth = ''
-#         adr = ''
-#         print("Введіть ім'я для виведення повного запису: ")
-#         nme = input()
-#         lich = 0 
-#         lichh = 0
-#         rahun = 0
-#         count_slov = len(book.data)
-                
-#         if nme == '':
-#             console.print('Такого імені нема!', style='bold red')
-#             continue
-#         for name, record  in book.data.items(): 
-#             rahun += 1           
-#             if name != nme and nme not in name and count_slov != rahun:                
-#                 continue           
-#             count_nme = name.count(nme)  
-#             if count_nme == 0:
-#                 lichh += 1                                      
-#             if  count_nme == 1 and lich == 0:                  
-#                 lich += 1     
-#                 for teleff in record:
-#                     telef += f"{teleff}\n"              
-#                 continue
-#             if lich == 1:
-#                 dat_birth = record
-#                 lich += 1  
-#                 continue 
-#             if 'Email' in name:
-#                 for mailll in record:
-#                     maill += f"{mailll}\n"                 
-#                 continue
-#             if 'Адреса' in name:
-#                 adr = record                
-#                 break
-#         if lichh > 0:
-#             console.print('Такого імені нема!', style='bold red')
-#         table = Table(show_header=True, header_style="bold magenta")
-#         table.add_column("Ім'я", style="dim", width=12)
-#         table.add_column("Телефон", width=23)
-#         table.add_column("День народження", justify="right")
-#         table.add_column("Email", justify="left", width=23)
-#         table.add_column("Адреса", justify="left", width=23)
-#         table.add_row(nme, telef, dat_birth, maill, adr)                
-#         console.print('ЗНАЙДЕНО ЗАПИС: ', style='bold yellow')
-#         console.print(table)               
-#         continue        
-        
-#     if inp == 'r' or inp == 'к':            
-#     # ПОСТОРІНКОВИЙ ПЕРЕГЛЯД КНИГИ КОНТАКТІВ
-#         book.iterator(10)  
-#         continue   
-    
-#     # ВИДАЛЕННЯ ЗАПИСУ
-#     if inp == 'd' or inp == 'в':
-#         print("Введіть ім'я для видалення запису")
-#         imia = input()
-#         book.delete(imia)
-#         continue
-    
-#     # РЕДАГУВАННЯ ЗАПИСУ    
-#     if inp == 'ed' or inp == 'ув':
-#         file_name = 'data.json'
-#         with open(file_name, "r", encoding='utf-8') as fh:        
-#             unpacked = json.load(fh)    
-#             data = unpacked
-#         while True:
-#             console.print('ЯК БУДЕМО РЕДАГУВАТИ? ', style='bold yellow')   
-#             console.print("[blue]1.[/blue] Видалити телефон? - натисни номер та Enter\n[green]2.[/green] Додати телефон? - натисни номер та Enter\n[yellow]3.[/yellow] Видалити email? - натисни номер та Enter\n[red]4.[/red] Додати email? - натисни номер та Enter\n[blue]5.[/blue] Редагувати адресу? - натисни номер та Enter\n[green]6.[/green] Змінити день народження? - натисни номер та Enter\n[reverse]7.[/reverse] Вийти з режиму редагування? - натисни номер та Enter")
-#             inp = input()  
-#             if inp == '1':                
-#                 print("Введіть телефон, який треба видалити: ")
-#                 phone = input()
-#                 len_ph = len(phone)
-#                 smb = str(phone).isnumeric()
-#                 tell = []
-#                 if len_ph != 10 or smb == False:
-#                     console.print("Такого Телефона Нема", style='bold red')
-#                     continue        
-#                 for x, y in data.items():               
-#                     if phone in y:
-#                         lichh = len(y)                        
-#                         if lichh == 1:
-#                             data[x] = []
-#                             print('')
-#                             console.print(f'Телефон для {x} [blue]видалено[/blue]')
-#                             print('')   
-#                         if lichh > 1:
-#                             for z in y:                                                
-#                                 if phone == z:
-#                                     continue                                
-#                                 tell.append(z)                                
-#                                 data[x] = tell
-#                                 print('')
-#                                 console.print(f'Телефон для {x} [blue]видалено[/blue]')
-#                                 print('')                                                               
-#                 continue                
-#             if inp == '2':                
-#                 print("Введіть ім'я, у контакт якого ви хочете додати телефон: ")
-#                 namee = input()                
-#                 try:                    
-#                     val_namee = data[namee] 
-#                     print("Введіть телефон, який треба додати: ")
-#                     phone = input()
-#                     len_ph = len(phone)
-#                     smb = str(phone).isnumeric()
-#                     tell = []
-#                     if len_ph != 10 or smb == False:
-#                         console.print("Неправильний формат.\nВведіть номер телефона без пробілів, символів, має бути 10 цифр, натисність Enter", style='bold red')
-#                         continue                                      
-#                     for x in val_namee:
-#                         tell.append(x) 
-#                     tell.append(phone) 
-#                     data[namee] = tell
-#                     print('')
-#                     console.print(f'Телефон для {namee} [blue]додано[/blue]')
-#                     print('')
-#                 except KeyError:     
-#                     console.print("Такого імені у базі нема!", style='bold red')
-#                     continue                                         
-#             if inp == '3':                
-#                 print("Введіть email, який треба видалити: ")
-#                 maile = input()
-#                 if maile == '':
-#                     console.print("Такого Email Нема", style='bold red')
-#                     continue
-#                 len_ph = len(maile)               
-#                 ml = []                  
-#                 for x, y in data.items():
-#                     ok = 0
-#                     if maile in y:
-#                         ok = 1
-#                         lichh = len(y)                        
-#                         if lichh == 1:
-#                             data[x] = []
-#                             print('')
-#                             console.print(f'Email для {x} [blue]видалено[/blue]')
-#                             print('')   
-#                             break
-#                         if lichh > 1:
-#                             for z in y:                                                
-#                                 if maile == z:
-#                                     continue                                
-#                                 ml.append(z)                                
-#                                 data[x] = ml
-#                                 print('')
-#                                 console.print(f'Email для {x} [blue]видалено[/blue]')
-#                                 print('')                                 
-#                             break
-#                 if ok == 0:
-#                     console.print("Такого Email Нема", style='bold red') 
-#                     print(data)                         
-#                 continue               
-#             if inp == '4':
-#                 print("Введіть ім'я, у контакт якого ви хочете додати email: ")
-#                 namee = input()
-#                 namee = f'{namee}_Email'                    
-#                 try:                    
-#                     val_namee = data[namee] 
-#                     print("Введіть email, який треба додати: ")
-#                     maile = input()
-#                     ml_split = maile.split('@')
-#                     for n_sp in ml_split:
-#                         pass
-#                     len_mail = len(maile)            
-#                     rah_1 = maile.count('@')
-#                     rah_2 = maile.count(' ')
-#                     rah_3 = n_sp.count('.')
-#                     rah_4 = maile.count(',')            
-#                     if len_mail < 4 or rah_2 > 0 or rah_1 < 1 or rah_3 == 0 or rah_4 != 0:
-#                         console.print("Введіть електронну адресу латинськими літерами у такому форматі: name@name.name, натисність Enter: ", style='bold red')
-#                         continue          
-#                     mle = []                                                       
-#                     for x in val_namee:
-#                         mle.append(x) 
-#                     mle.append(maile) 
-#                     data[namee] = mle
-#                     print('')
-#                     console.print(f'Для {namee} [blue]додано[/blue]')
-#                     print('')                            
-#                 except KeyError:     
-#                     console.print("Такого імені у базі нема!", style='bold red')
-#                     continue
-#                 continue            
-#             if inp == '5':
-#                 print("Введіть ім'я, для якого ви хочете змінити адресу: ")
-#                 namee = input()
-#                 namee = f'{namee}_Адреса'                    
-#                 try:                    
-#                     val_namee = data[namee] 
-#                     print("Введіть адресу у довільній формі: ")
-#                     adr = input()                    
-#                     data[namee] = adr
-#                     print('')
-#                     console.print(f'Для {namee} [blue]змінено[/blue]')
-#                     print('')                    
-#                 except KeyError:     
-#                     console.print("Такого імені у базі нема!", style='bold red')
-#                     continue
-#                 continue            
-#             if inp == '6':                
-#                 print("Введіть ім'я, для якого ви хочете змінити день народження: ")
-#                 namee = input()
-#                 namee = f'{namee}_день народження'                    
-#                 try:                    
-#                     val_namee = data[namee]                  
-#                     print("Введіть дату народження.")
-#                     int_ = 0
-#                     while int_ != 1000:        
-#                         int_ += 1
-#                         print("Рік? (чотири цифри + Enter): ")
-#                         try:
-#                             birth_yer = int(input())
-#                         except ValueError:
-#                             continue
-#                         break                
-#                     int_ = 0
-#                     while int_ != 1000:        
-#                         int_ += 1
-#                         print("Місяць? (дві цифри + Enter): ")
-#                         try:
-#                             birth_mont = int(input())
-#                         except ValueError:
-#                             continue
-#                         break                    
-#                     int_ = 0
-#                     while int_ != 1000:        
-#                         int_ += 1
-#                         print("День? (дві цифри + Enter): ")
-#                         try:            
-#                             birth_day = int(input())
-#                         except ValueError:                            
-#                             continue
-#                         break   
-#                     try:
-#                         birth = date(birth_yer, birth_mont, birth_day)  
-#                     except ValueError: 
-#                         console.print('Неправильний формат дня народження!', style='bold red')                           
-#                         continue
-#                     data[namee] = str(birth)                   
-#                     print('')
-#                     console.print(f'Для {namee} [blue]змінено[/blue]')
-#                     print('')                                                 
-#                 except KeyError:     
-#                     console.print("Такого імені у базі нема!", style='bold red')
-#                     continue
-#                 continue            
-#             if inp == '7':
-#                 file_name = 'data.json'        
-#                 with open(file_name, "w", encoding='utf-8') as fh:
-#                     json.dump(data, fh, ensure_ascii=False)  
-#                 break
-            
-#         continue
-        
-# # Основний блок заповнення Книги контактів
-#     new_name = ''
-#     new_phone = ''
-#     birth_yer = 0
-#     birth_mont = 0
-#     birth_day = 0
-#     new_email = ''
-#     new_adress = ' '
-    
-#     print("Введіть ім'я та натисність Enter: ")
-#     print('Помилково натиснули Enter? Натисніть ще раз і почніть спочатку:')
-#     new_name = input() 
-#     if new_name == '':
-#         os.abort()           
-#     new_record = Record(new_name)
-#     Name_ = new_record.name.value        
-#     print("Введіть номер телефона без пробілів, символів, має бути 10 цифр, натисність Enter: ")
-#     new_phone = input()
-#     phones_ = new_record.add_phone(new_phone)
-    
-#     print("Введіть дату народження.")
-#     int_ = 0
-#     while int_ != 1000:        
-#         int_ += 1
-#         print("Рік? (чотири цифри + Enter): ")
-#         try:
-#             birth_yer = int(input())
-#         except ValueError:
-#             continue
-#         break   
-#     int_ = 0
-#     while int_ != 1000:        
-#         int_ += 1
-#         print("Місяць? (дві цифри + Enter): ")
-#         try:
-#             birth_mont = int(input())
-#         except ValueError:
-#             continue
-#         break    
-#     int_ = 0
-#     while int_ != 1000:        
-#         int_ += 1
-#         print("День? (дві цифри + Enter): ")
-#         try:            
-#             birth_day = int(input())
-#         except ValueError:
-#             continue
-#         break     
-#     try:
-#         birth_ = new_record.days_to_birthday(birth_yer, birth_mont, birth_day)  
-#     except ValueError: 
-#         console.print('Неправильний формат дня народження!', style='bold red')                           
-#         continue  
-#     print("Введіть електронну адресу латинськими літерами у такому форматі: name@name.name, натисність Enter: ")
-#     new_email = input()      
-#     emails_ = new_record.add_email(new_email)       
-#     print("Введіть адресу в довільному форматі та натисність Enter: ")
-#     new_adress = input()
-#     adress_ = new_record.add_adress(new_adress)      
-#     book.add_record(new_record)
