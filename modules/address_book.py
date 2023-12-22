@@ -209,11 +209,15 @@ class AddressBook(UserDict):
         self.data[record.name.value] = record 
                         
     def find(self, search_text):
+        found_record = self.data.get(search_text)
+        return found_record if found_record else None
+    
+    def find_records(self, search_text):
         found_records = []
         for record in self.data.values():
             if record.search(search_text):
                 found_records.append(record)
-        return found_records     
+        return found_records      
         
     def find_phone(self, ph_):        
         for dict_ in self.data.items():            

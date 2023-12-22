@@ -36,6 +36,7 @@ class ConsoleInterface:
         "add-email",
         "add-address",
         "add-birthday",
+        "add-contact-note",
         "edit-phone",
         "edit-email",
         "del-phone",
@@ -84,6 +85,8 @@ class ConsoleInterface:
                 self.add_address()
             elif choice == "add-birthday":
                 self.add_birthday()
+            elif choice == "add-contact-note":
+                self.add_contact_note()
             elif choice == "edit-phone":
                 self.edit_phone()
             elif choice == "edit-email":
@@ -125,6 +128,8 @@ class ConsoleInterface:
             elif choice in ["bye","exit","quit"]:
                 print("Дякую за використання! До побачення.")
                 break
+            elif choice == "help":
+                self.help()
             else:
                 print("Невірний вибір. Спробуйте ще раз.")
                 
@@ -173,7 +178,7 @@ class ConsoleInterface:
     def find_contact(self):
         records_completer = WordCompleter(list(self.address_book.data.keys()))
         name = prompt("Введіть строку для пошуку контакту: ", completer=records_completer)
-        contacts = self.address_book.find(name)
+        contacts = self.address_book.find_records(name)
         if contacts:
             table = Table(show_header=True, header_style="bold red")
             table.add_column("Iм'я", style="dim", width=10) # ширину можете міняти, назви колонок також
@@ -192,12 +197,15 @@ class ConsoleInterface:
             print("Нічого не знайдено.")
             
     def edit_contact(self):
-        #TODO
-        pass
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            address = input("Вкажіть нове ім'я контакту: ")
+            contact.name = address
     
     def del_contact(self):
-        #TODO
-        pass
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        self.address_book.delete(contact_name)
 
     def show_contacts(self):
         contacts = list(self.address_book.data.values())
@@ -249,14 +257,31 @@ class ConsoleInterface:
                 print("Ім'я контакту не знайдено")
     
     def add_address(self):
-        #TODO
-        #ЗАПИТАТИ ІМ"Я, АДРЕСУ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ АДРЕСУ (ХЗ, ХОЧА Б НА ДОВЖИНУ СТРОКИ, МІНІМУМ 3 СИМВОЛИ). ДОДАТИ АДРЕСУ КОНТАКТУ
-        pass
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            address = input("Вкажіть адресу: ")
+            contact.add_address(address)
+        else:
+            print("Ім'я контакту не знайдено")
     
     def add_birthday(self):
-        #TODO
-        #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
-        pass
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            birthday = input("Введіть день народження контакту (рррр-мм-дд): ")
+            contact.add_birthday(birthday)
+        else:
+            print("Ім'я контакту не знайдено")
+            
+    def add_contact_note(self):
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            note = input("Введіть примітку: ")
+            contact.add_note(note)
+        else:
+            print("Ім'я контакту не знайдено")
     
     def edit_phone(self):
         #TODO
@@ -409,6 +434,37 @@ class ConsoleInterface:
     
     def show_all_tags(self):
         print(self.notebook.get_all_tags())
+        
+    def help(self):
+        print("""- add-contact [Ім'я]: Створити новий контактний запис із зазначеним ім'ям.
+- find-contact [рядок_пошуку]: Пошук контактних записів за рядком пошуку.
+- edit-contact [Ім'я] [нове_Ім'я]: Змінити ім'я контактного запису.
+- del-contact [Ім'я]: Видалити контактний запис.
+- show-all: Перелічити всі контактні записи.
+- add-phone [Ім'я] [Телефон]: Додати номер телефону до контакту.
+- edit-phone [Ім'я] [Телефон] [новий_Телефон]: Замінити номер телефону у контакті.
+- del-phone [Ім'я] [Телефон]: Видалити номер телефону з контакту.
+- add-email [Ім'я] [Електронна_пошта]: Додати електронну адресу до контакту.
+- edit-email [Ім'я] [Електронна_пошта] [нова_Електронна_пошта]: Замінити електронну адресу у контакті.
+- del-email [Ім'я] [Електронна_пошта]: Видалити електронну адресу з контакту.
+- add-birthday [Ім'я] [День_народження]: Встановити день народження для контакту.
+- del-birthday [Ім'я]: Видалити день народження з контакту.
+- add-address [Ім'я] [Адреса]: Встановити адресу для контакту.
+- del-address [Ім'я]: Видалити адресу з контакту.
+- add-contact-note [Ім'я] [Примітка]: Додати примітку контакту
+- add-note: Додати нотатку в Блокнот.
+- find-note [рядок_пошуку]: Перелік всіх нотаток із даними рядка пошуку в нотатці
+- show-notes: Перелічити всі нотатки
+- del-note [Назва_нотатки]: Видалити нотатку з Блокнота
+- add-tag [Назва_нотатки] [Тег]: Додати тег до нотатки
+- find-tag [рядок_пошуку]: Перелік всіх нотаток із даними рядка пошуку в тегах
+- del-tag [Назва_нотатки] [Тег]: Видалити тег з нотатки
+- sort-tag: Виводить список нотаток відсортований за кількістю тегів
+- show-all-tags: Перелічити всі збережені теги
+- next-birthdays [ціле_число]: Показати надходження днів народження протягом вказаної кількості днів.
+- close,exit або bye: Вийти з додатка.
+- help: Відображення списку доступних команд."""
+              )
 
 if __name__ == "__main__":
     console_interface = ConsoleInterface()
