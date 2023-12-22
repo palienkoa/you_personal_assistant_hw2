@@ -36,6 +36,7 @@ class ConsoleInterface:
         "add-email",
         "add-address",
         "add-birthday",
+        "add-contact-note",
         "edit-phone",
         "edit-email",
         "del-phone",
@@ -84,6 +85,8 @@ class ConsoleInterface:
                 self.add_address()
             elif choice == "add-birthday":
                 self.add_birthday()
+            elif choice == "add-contact-note":
+                self.add_contact_note()
             elif choice == "edit-phone":
                 self.edit_phone()
             elif choice == "edit-email":
@@ -173,7 +176,7 @@ class ConsoleInterface:
     def find_contact(self):
         records_completer = WordCompleter(list(self.address_book.data.keys()))
         name = prompt("Введіть строку для пошуку контакту: ", completer=records_completer)
-        contacts = self.address_book.find(name)
+        contacts = self.address_book.find_records(name)
         if contacts:
             table = Table(show_header=True, header_style="bold red")
             table.add_column("Iм'я", style="dim", width=10) # ширину можете міняти, назви колонок також
@@ -192,12 +195,15 @@ class ConsoleInterface:
             print("Нічого не знайдено.")
             
     def edit_contact(self):
-        #TODO
-        pass
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            address = input("Вкажіть нове ім'я контакту: ")
+            contact.name = address
     
     def del_contact(self):
-        #TODO
-        pass
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        self.address_book.delete(contact_name)
 
     def show_contacts(self):
         contacts = list(self.address_book.data.values())
@@ -249,14 +255,31 @@ class ConsoleInterface:
                 print("Ім'я контакту не знайдено")
     
     def add_address(self):
-        #TODO
-        #ЗАПИТАТИ ІМ"Я, АДРЕСУ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ АДРЕСУ (ХЗ, ХОЧА Б НА ДОВЖИНУ СТРОКИ, МІНІМУМ 3 СИМВОЛИ). ДОДАТИ АДРЕСУ КОНТАКТУ
-        pass
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            address = input("Вкажіть адресу: ")
+            contact.add_address(address)
+        else:
+            print("Ім'я контакту не знайдено")
     
     def add_birthday(self):
-        #TODO
-        #ЗАПИТАТИ ІМ"Я, ДАТУ НАРОДЖЕННЯ. ЗНАЙТИ КОНТАКТ. ВАЛІДУВАТИ ДАТУ. ДОДАТИ ДАТУ НАРОДЖЕННЯ КОНТАКТУ
-        pass
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            birthday = input("Введіть день народження контакту (рррр-мм-дд): ")
+            contact.add_birthday(birthday)
+        else:
+            print("Ім'я контакту не знайдено")
+            
+    def add_contact_note(self):
+        contact_name = input("Введіть ім'я контакту: ")#.capitalize()        
+        contact = self.address_book.find(contact_name)
+        if contact:
+            note = input("Введіть примітку: ")
+            contact.add_note(note)
+        else:
+            print("Ім'я контакту не знайдено")
     
     def edit_phone(self):
         #TODO
