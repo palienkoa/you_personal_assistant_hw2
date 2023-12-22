@@ -131,7 +131,7 @@ class ConsoleInterface:
             elif choice == "help":
                 self.help()
             else:
-                print("Невірний вибір. Спробуйте ще раз.")
+                print("Невірна команда. Введіть help щоб отримати список доступних команд")
                 
         #dump address_book and notebook
         self.address_book.dump()
