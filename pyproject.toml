@@ -6,8 +6,8 @@ authors = ["Sasha <palienkoa@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-prompt-toolkit = "^3.0.43"
+python = "3.12"
+prompt-toolkit = "3.0.43"
 rich = "^13.7.1"
 pathlib = "^1.0.1"
 
